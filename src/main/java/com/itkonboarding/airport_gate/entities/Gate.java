@@ -1,62 +1,38 @@
 package com.itkonboarding.airport_gate.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.GenerationType.AUTO;
+
 @Entity
-@JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
+@Getter
+@Setter
 public class Gate {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = AUTO)
     @Column(name = "gate_id")
     private Integer id;
+
     @Column(nullable = false, unique = true)
     private String gateName;
-    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
-    @JoinColumn(name="airport")
+
+    @ManyToOne(cascade = REFRESH, fetch = LAZY)
+    @JoinColumn(name = "airport")
     private Airport airport;
+
     @JsonIgnore
-    @OneToMany(mappedBy = "gate", cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "gate", cascade = REFRESH)
     private List<Flight> flights = new ArrayList<>();
+
     @Version
     private Integer version;
-
-    public Gate() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getGateName() {
-        return gateName;
-    }
-
-    public void setGateName(String gateName) {
-        this.gateName = gateName;
-    }
-
-    public Airport getAirport() {
-        return airport;
-    }
-
-    public void setAirport(Airport airport) {
-        this.airport = airport;
-    }
-
-    public List<Flight> getFlights() {
-        return flights;
-    }
-
-    public void setFlights(List<Flight> flights) {
-        this.flights = flights;
-    }
 }
