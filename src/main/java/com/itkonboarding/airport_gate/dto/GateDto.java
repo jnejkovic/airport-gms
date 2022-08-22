@@ -16,4 +16,6 @@ public class GateDto {
     private Airport airport;
 
     private List<FlightDto> flights = new ArrayList<>();
+
+    private Boolean status;
 }
