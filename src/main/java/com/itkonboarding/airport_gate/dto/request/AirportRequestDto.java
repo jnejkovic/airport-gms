@@ -13,7 +13,5 @@ import java.util.List;
 @Data
 public class AirportRequestDto {
 
-    private Integer id;
-
     private String airportName;
 }

@@ -14,9 +14,7 @@ import java.util.List;
 @Data
 public class GateRequestDto {
 
-    private Integer id;
-
     private String gateName;
 
-    private Airport airport;
+    private Integer airportId;
 }

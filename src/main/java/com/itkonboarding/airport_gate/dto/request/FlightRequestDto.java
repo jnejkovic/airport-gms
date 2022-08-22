@@ -10,9 +10,7 @@ import lombok.Data;
 @Data
 public class FlightRequestDto {
 
-    private Integer id;
-
     private String flightIndex;
 
-    private GateRequestDto gate;
+    private Integer gateId;
 }

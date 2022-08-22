@@ -20,7 +20,7 @@ public class GateResponseDto {
 
     private String gateName;
 
-    private Airport airport;
+    private AirportResponseDto airport;
 
     private List<FlightRequestDto> flights = new ArrayList<>();
 
