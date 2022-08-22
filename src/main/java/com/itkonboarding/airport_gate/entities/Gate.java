@@ -1,6 +1,7 @@
 package com.itkonboarding.airport_gate.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.itkonboarding.airport_gate.enumerations.EStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,11 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.AUTO;
 
+/**
+ * Entity representing gate
+ *
+ * @author jnejkovic
+ */
 @Entity
 @Getter
 @Setter
@@ -33,8 +39,9 @@ public class Gate {
     @OneToMany(mappedBy = "gate", cascade = REFRESH)
     private List<Flight> flights = new ArrayList<>();
 
-    @Column (nullable = false)
-    private Boolean status;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING )
+    private EStatus status;
 
     @Version
     private Integer version;

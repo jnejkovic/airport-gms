@@ -1,4 +1,4 @@
-package com.itkonboarding.airport_gate.dto;
+package com.itkonboarding.airport_gate.dto.request;
 
 import com.itkonboarding.airport_gate.entities.Airport;
 import lombok.Data;
@@ -6,8 +6,13 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Gate Dto used for requests
+ *
+ * @author jnejkovic
+ */
 @Data
-public class GateDto {
+public class GateRequestDto {
 
     private Integer id;
 
@@ -15,7 +20,5 @@ public class GateDto {
 
     private Airport airport;
 
-    private List<FlightDto> flights = new ArrayList<>();
-
-    private Boolean status;
+    private List<FlightRequestDto> flights = new ArrayList<>();
 }

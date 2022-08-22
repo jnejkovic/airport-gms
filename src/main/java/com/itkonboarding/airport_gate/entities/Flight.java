@@ -9,6 +9,11 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.AUTO;
 
+/**
+ * Entity representing flight
+ *
+ * @author jnejkovic
+ */
 @Entity
 @Getter
 @Setter

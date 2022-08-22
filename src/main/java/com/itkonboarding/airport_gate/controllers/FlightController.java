@@ -1,6 +1,7 @@
 package com.itkonboarding.airport_gate.controllers;
 
-import com.itkonboarding.airport_gate.dto.FlightDto;
+import com.itkonboarding.airport_gate.dto.request.FlightRequestDto;
+import com.itkonboarding.airport_gate.dto.response.FlightResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,32 +9,42 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller responsible for flights
+ *
+ * @author jnejkovic
+ */
 @RestController
-@RequestMapping(value="/flight")
+@RequestMapping(value = "flight")
 public class FlightController {
 
-    @GetMapping("/{flightId}")
-    public ResponseEntity<?> findFlightById(@PathVariable Integer flightId) {
-        return new ResponseEntity<FlightDto>(new FlightDto(), HttpStatus.OK);
+    @GetMapping("{id}")
+    public ResponseEntity<?> get(@PathVariable Integer id) {
+        return new ResponseEntity<FlightResponseDto>(new FlightResponseDto(), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/")
-    public ResponseEntity<?> createNewFlight(@RequestBody FlightDto newGate) {
-        return new ResponseEntity<FlightDto>(new FlightDto(), HttpStatus.CREATED);
+    @PostMapping
+    public ResponseEntity<?> create(@RequestBody FlightRequestDto newGate) {
+        return new ResponseEntity<FlightResponseDto>(new FlightResponseDto(), HttpStatus.CREATED);
     }
 
-    @PutMapping(value = "/{flightId}")
-    public ResponseEntity<?> updateFlight(@PathVariable Integer flightId, @RequestBody FlightDto newFlight) {
-        return new ResponseEntity<FlightDto>(new FlightDto(), HttpStatus.OK);
+    @PutMapping(value = "{id}")
+    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody FlightRequestDto newFlight) {
+        return new ResponseEntity<FlightResponseDto>(new FlightResponseDto(), HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{flightId}")
-    public ResponseEntity<?> deleteFlightById(@PathVariable Integer flightId) {
-        return new ResponseEntity<FlightDto>(new FlightDto(), HttpStatus.OK);
+    @DeleteMapping(value = "{id}")
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
+        return new ResponseEntity<FlightResponseDto>(new FlightResponseDto(), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/")
-    public ResponseEntity<?> getAllFlights() {
-        return new ResponseEntity<List<FlightDto>>(new ArrayList<FlightDto>(), HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<?> getAll() {
+        return new ResponseEntity<List<FlightResponseDto>>(new ArrayList<FlightResponseDto>(), HttpStatus.OK);
+    }
+
+    @PutMapping(value = "{flightId}/gate/{gateId}")
+    public ResponseEntity<?> addFlightToGate(@PathVariable Integer gateId, @PathVariable Integer flightId) {
+        return new ResponseEntity<FlightResponseDto>(new FlightResponseDto(), HttpStatus.OK);
     }
 }
