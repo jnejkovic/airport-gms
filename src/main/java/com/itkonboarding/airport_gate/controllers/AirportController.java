@@ -2,12 +2,13 @@ package com.itkonboarding.airport_gate.controllers;
 
 import com.itkonboarding.airport_gate.dto.request.AirportRequestDto;
 import com.itkonboarding.airport_gate.dto.response.AirportResponseDto;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /**
  * Controller responsible for airports
@@ -19,32 +20,33 @@ import java.util.List;
 public class AirportController {
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody AirportRequestDto newAirport) {
-        return new ResponseEntity<AirportResponseDto>(new AirportResponseDto(), HttpStatus.CREATED);
+    @ResponseStatus(CREATED)
+    public AirportResponseDto create(@RequestBody AirportRequestDto newAirport) {
+        return new AirportResponseDto();
     }
 
     @PutMapping(value = "{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody AirportRequestDto updateAirport) {
-        return new ResponseEntity<AirportResponseDto>(new AirportResponseDto(), HttpStatus.OK);
+    public AirportResponseDto update(@PathVariable Integer id, @RequestBody AirportRequestDto updateAirport) {
+        return new AirportResponseDto();
     }
 
     @GetMapping(value = "{id}")
-    public ResponseEntity<?> get(@PathVariable Integer id) {
-        return new ResponseEntity<AirportResponseDto>(new AirportResponseDto(), HttpStatus.OK);
+    public AirportResponseDto get(@PathVariable Integer id) {
+        return new AirportResponseDto();
     }
 
     @DeleteMapping(value = "{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
-        return new ResponseEntity<AirportResponseDto>(new AirportResponseDto(), HttpStatus.OK);
+    @ResponseStatus(NO_CONTENT)
+    public void delete(@PathVariable Integer id) {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAll() {
-        return new ResponseEntity<List<AirportResponseDto>>(new ArrayList<AirportResponseDto>(), HttpStatus.OK);
+    public List<AirportResponseDto> getAll() {
+        return new ArrayList<AirportResponseDto>();
     }
 
     @GetMapping(value = "{airportId}/gates")
-    public ResponseEntity<?> getAllAirportGates(@PathVariable Integer airportId) {
-        return new ResponseEntity<List<AirportResponseDto>>(new ArrayList<AirportResponseDto>(), HttpStatus.OK);
+    public List<AirportResponseDto> getAllAirportGates(@PathVariable Integer airportId) {
+        return new ArrayList<AirportResponseDto>();
     }
 }

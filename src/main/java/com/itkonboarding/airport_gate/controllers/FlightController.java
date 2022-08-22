@@ -2,12 +2,13 @@ package com.itkonboarding.airport_gate.controllers;
 
 import com.itkonboarding.airport_gate.dto.request.FlightRequestDto;
 import com.itkonboarding.airport_gate.dto.response.FlightResponseDto;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /**
  * Controller responsible for flights
@@ -19,32 +20,33 @@ import java.util.List;
 public class FlightController {
 
     @GetMapping("{id}")
-    public ResponseEntity<?> get(@PathVariable Integer id) {
-        return new ResponseEntity<FlightResponseDto>(new FlightResponseDto(), HttpStatus.OK);
+    public FlightResponseDto get(@PathVariable Integer id) {
+        return new FlightResponseDto();
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody FlightRequestDto newGate) {
-        return new ResponseEntity<FlightResponseDto>(new FlightResponseDto(), HttpStatus.CREATED);
+    @ResponseStatus(CREATED)
+    public FlightResponseDto create(@RequestBody FlightRequestDto newGate) {
+        return new FlightResponseDto();
     }
 
     @PutMapping(value = "{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody FlightRequestDto newFlight) {
-        return new ResponseEntity<FlightResponseDto>(new FlightResponseDto(), HttpStatus.OK);
+    public FlightResponseDto update(@PathVariable Integer id, @RequestBody FlightRequestDto newFlight) {
+        return new FlightResponseDto();
     }
 
     @DeleteMapping(value = "{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
-        return new ResponseEntity<FlightResponseDto>(new FlightResponseDto(), HttpStatus.OK);
+    @ResponseStatus(NO_CONTENT)
+    public void delete(@PathVariable Integer id) {
     }
 
     @GetMapping
-    public ResponseEntity<?> getAll() {
-        return new ResponseEntity<List<FlightResponseDto>>(new ArrayList<FlightResponseDto>(), HttpStatus.OK);
+    public List<FlightResponseDto> getAll() {
+        return new ArrayList<FlightResponseDto>();
     }
 
     @PutMapping(value = "{flightId}/gate/{gateId}")
-    public ResponseEntity<?> addFlightToGate(@PathVariable Integer gateId, @PathVariable Integer flightId) {
-        return new ResponseEntity<FlightResponseDto>(new FlightResponseDto(), HttpStatus.OK);
+    public FlightResponseDto addFlightToGate(@PathVariable Integer gateId, @PathVariable Integer flightId) {
+        return new FlightResponseDto();
     }
 }

@@ -1,11 +1,11 @@
 package com.itkonboarding.airport_gate.controllers;
 
 import com.itkonboarding.airport_gate.dto.request.GateRequestDto;
-import com.itkonboarding.airport_gate.dto.request.GateStatusRequestDto;
 import com.itkonboarding.airport_gate.dto.response.GateResponseDto;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 /**
  * Controller responsible for gates
@@ -17,32 +17,33 @@ import org.springframework.web.bind.annotation.*;
 public class GateController {
 
     @GetMapping("{id}")
-    public ResponseEntity<?> get(@PathVariable Integer id) {
-        return new ResponseEntity<GateResponseDto>(new GateResponseDto(), HttpStatus.OK);
+    public GateResponseDto get(@PathVariable Integer id) {
+        return new GateResponseDto();
     }
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody GateRequestDto newGate) {
-        return new ResponseEntity<GateResponseDto>(new GateResponseDto(), HttpStatus.CREATED);
+    @ResponseStatus(CREATED)
+    public GateResponseDto create(@RequestBody GateRequestDto newGate) {
+        return new GateResponseDto();
     }
 
     @PutMapping(value = "{id}")
-    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody GateRequestDto newGate) {
-        return new ResponseEntity<GateResponseDto>(new GateResponseDto(), HttpStatus.OK);
+    public GateResponseDto update(@PathVariable Integer id, @RequestBody GateRequestDto newGate) {
+        return new GateResponseDto();
     }
 
     @PutMapping(value = "{id}/available")
-    public ResponseEntity<?> updateStatus(@PathVariable Integer id, @RequestBody GateStatusRequestDto newStatus) {
-        return new ResponseEntity<GateResponseDto>(new GateResponseDto(), HttpStatus.OK);
+    public GateResponseDto updateStatus(@PathVariable Integer id) {
+        return new GateResponseDto();
     }
 
     @DeleteMapping(value = "{id}")
-    public ResponseEntity<?> delete(@PathVariable Integer id) {
-        return new ResponseEntity<GateResponseDto>(new GateResponseDto(), HttpStatus.OK);
+    @ResponseStatus(NO_CONTENT)
+    public void delete(@PathVariable Integer id) {
     }
 
     @PutMapping(value = "{gateId}/airport/{airportId}")
-    public ResponseEntity<?> addGateToAirport(@PathVariable Integer airportId, @PathVariable Integer gateId) {
-        return new ResponseEntity<GateResponseDto>(new GateResponseDto(), HttpStatus.OK);
+    public GateResponseDto addGateToAirport(@PathVariable Integer airportId, @PathVariable Integer gateId) {
+        return new GateResponseDto();
     }
 }

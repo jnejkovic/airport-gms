@@ -19,6 +19,4 @@ public class GateRequestDto {
     private String gateName;
 
     private Airport airport;
-
-    private List<FlightRequestDto> flights = new ArrayList<>();
 }

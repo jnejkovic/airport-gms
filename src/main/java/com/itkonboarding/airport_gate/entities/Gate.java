@@ -1,7 +1,6 @@
 package com.itkonboarding.airport_gate.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.itkonboarding.airport_gate.enumerations.EStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +22,10 @@ import static javax.persistence.GenerationType.AUTO;
 @Setter
 public class Gate {
 
+    public enum Status {
+        AVAILABLE, UNAVAILABLE
+    }
+
     @Id
     @GeneratedValue(strategy = AUTO)
     @Column(name = "gate_id")
@@ -40,8 +43,8 @@ public class Gate {
     private List<Flight> flights = new ArrayList<>();
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING )
-    private EStatus status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Version
     private Integer version;

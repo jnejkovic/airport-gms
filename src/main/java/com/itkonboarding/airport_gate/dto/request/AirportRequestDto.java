@@ -16,6 +16,4 @@ public class AirportRequestDto {
     private Integer id;
 
     private String airportName;
-
-    private List<GateRequestDto> gates = new ArrayList<>();
 }
