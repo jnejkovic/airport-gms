@@ -12,10 +12,19 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.AUTO;
 
+/**
+ * Entity representing gate
+ *
+ * @author jnejkovic
+ */
 @Entity
 @Getter
 @Setter
 public class Gate {
+
+    public enum Status {
+        AVAILABLE, UNAVAILABLE
+    }
 
     @Id
     @GeneratedValue(strategy = AUTO)
@@ -32,6 +41,10 @@ public class Gate {
     @JsonIgnore
     @OneToMany(mappedBy = "gate", cascade = REFRESH)
     private List<Flight> flights = new ArrayList<>();
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @Version
     private Integer version;

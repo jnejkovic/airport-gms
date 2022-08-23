@@ -1,0 +1,28 @@
+package com.itkonboarding.airport_gate.dto.response;
+
+import com.itkonboarding.airport_gate.dto.request.FlightRequestDto;
+import com.itkonboarding.airport_gate.entities.Airport;
+import com.itkonboarding.airport_gate.entities.Gate;
+import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Gate Dto used for response
+ *
+ * @author jnejkovic
+ */
+@Data
+public class GateResponseDto {
+
+    private Integer id;
+
+    private String gateName;
+
+    private AirportResponseDto airport;
+
+    private List<FlightRequestDto> flights = new ArrayList<>();
+
+    private Gate.Status status;
+}

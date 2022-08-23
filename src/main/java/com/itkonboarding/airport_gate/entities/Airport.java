@@ -11,6 +11,11 @@ import java.util.List;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.GenerationType.AUTO;
 
+/**
+ * Entity representing airport
+ *
+ * @author jnejkovic
+ */
 @Entity
 @Getter
 @Setter
