@@ -6,13 +6,13 @@ import com.itkonboarding.airport_gate.entities.Flight;
 import com.itkonboarding.airport_gate.repositories.FlightRepository;
 import com.itkonboarding.airport_gate.repositories.GateRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Objects.nonNull;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Implementation of {@link FlightService}
@@ -48,7 +48,7 @@ public class FlightServiceImp implements FlightService {
         var updatedFlight = flightRepository.findById(id).orElseThrow(() -> {
             return new RuntimeException("Flight not found");
         });
-        if (StringUtils.isNotEmpty(flight.getFlightIndex())) {
+        if (isNotBlank(flight.getFlightIndex())) {
             updatedFlight.setFlightIndex(flight.getFlightIndex());
         }
         if (nonNull(flight.getGateId())) {

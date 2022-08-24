@@ -6,12 +6,12 @@ import com.itkonboarding.airport_gate.entities.Gate;
 import com.itkonboarding.airport_gate.repositories.AirportRepository;
 import com.itkonboarding.airport_gate.repositories.GateRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 import static java.util.Objects.nonNull;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 /**
  * Implementation of {@link GateService}
@@ -46,7 +46,7 @@ public class GateServiceImp implements GateService {
         var updatedGate = gateRepository.findById(id).orElseThrow(() -> {
             return new RuntimeException("Gate not found");
         });
-        if (StringUtils.isNotEmpty(gate.getGateName())) {
+        if (isNotBlank(gate.getGateName())) {
             updatedGate.setGateName(gate.getGateName());
         }
         if (nonNull(gate.getAirportId())) {
