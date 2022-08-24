@@ -9,6 +9,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Implementation of {@link AirportService}
+ *
+ * @author jnejkovic
+ */
 @Service
 @RequiredArgsConstructor
 public class AirportServiceImp implements AirportService {
@@ -22,7 +27,7 @@ public class AirportServiceImp implements AirportService {
 
     @Override
     public Airport create(AirportRequestDto airport) {
-        Airport newAirport = new Airport();
+        var newAirport = new Airport();
         newAirport.setAirportName(airport.getAirportName());
         airportRepository.save(newAirport);
         return newAirport;
@@ -30,19 +35,19 @@ public class AirportServiceImp implements AirportService {
 
     @Override
     public Airport update(Integer id, AirportRequestDto airport) {
-        Optional<Airport> updatedAirport = airportRepository.findById(id);
-        if (updatedAirport.isPresent() && airport.getAirportName() != null) {
-            updatedAirport.get().setAirportName(airport.getAirportName());
-        }
-        airportRepository.save(updatedAirport.get());
-        return updatedAirport.get();
+        var updatedAirport = airportRepository.findById(id).orElseThrow(() -> {
+            return new RuntimeException("Airport not found");
+        });
+        airportRepository.save(updatedAirport);
+        return updatedAirport;
     }
 
     @Override
     public void delete(Integer id) {
-        Optional<Airport> airport = airportRepository.findById(id);
-        if (airport.isPresent())
-            airportRepository.delete(airport.get());
+        var airport = airportRepository.findById(id).orElseThrow(() -> {
+            return new RuntimeException("Airport not found");
+        });
+        airportRepository.delete(airport);
     }
 
     @Override
