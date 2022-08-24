@@ -47,6 +47,6 @@ public class AirportServiceImp implements AirportService {
 
     @Override
     public List<Airport> getAll() {
-        return (List<Airport>) airportRepository.findAll();
+        return airportRepository.findAll();
     }
 }

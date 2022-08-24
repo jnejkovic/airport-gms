@@ -39,12 +39,12 @@ public class FlightServiceImp implements FlightService {
     public Flight update(Integer id, FlightRequestDto flight) {
         Optional<Flight> updatedFlight = flightRepository.findById(id);
         if (updatedFlight.isPresent()) {
-            if (flight.getFlightIndex()!=null){
+            if (flight.getFlightIndex() != null) {
                 updatedFlight.get().setFlightIndex(flight.getFlightIndex());
             }
-            if(flight.getGateId()!=null){
+            if (flight.getGateId() != null) {
                 Optional<Gate> gate = gateRepository.findById(flight.getGateId());
-                if (gate.isPresent()){
+                if (gate.isPresent()) {
                     updatedFlight.get().setGate(gate.get());
                 }
             }
@@ -62,6 +62,6 @@ public class FlightServiceImp implements FlightService {
 
     @Override
     public List<Flight> getAll() {
-        return (List<Flight>) flightRepository.findAll();
+        return flightRepository.findAll();
     }
 }
