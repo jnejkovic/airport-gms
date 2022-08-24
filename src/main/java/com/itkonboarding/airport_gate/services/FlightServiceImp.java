@@ -6,11 +6,13 @@ import com.itkonboarding.airport_gate.entities.Flight;
 import com.itkonboarding.airport_gate.repositories.FlightRepository;
 import com.itkonboarding.airport_gate.repositories.GateRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+
+import static java.util.Objects.nonNull;
 
 /**
  * Implementation of {@link FlightService}
@@ -24,7 +26,7 @@ public class FlightServiceImp implements FlightService {
     private final GateRepository gateRepository;
 
     @Override
-    public Optional<Flight> getById(Integer id) {
+    public Optional<Flight> findById(Integer id) {
         return flightRepository.findById(id);
     }
 
@@ -33,9 +35,8 @@ public class FlightServiceImp implements FlightService {
     public Flight create(FlightRequestDto flight) {
         var newFlight = new Flight();
         newFlight.setFlightIndex(flight.getFlightIndex());
-        var gate = gateRepository.findById(flight.getGateId()).orElseThrow(() -> {
-            return new RuntimeException("Gate not found");
-        });
+        var gate = gateRepository.findById(flight.getGateId()).orElseThrow(() ->
+                new RuntimeException("Gate not found"));
         newFlight.setGate(gate);
         flightRepository.save(newFlight);
         return newFlight;
@@ -47,13 +48,12 @@ public class FlightServiceImp implements FlightService {
         var updatedFlight = flightRepository.findById(id).orElseThrow(() -> {
             return new RuntimeException("Flight not found");
         });
-        if (!flight.getFlightIndex().isEmpty()) {
+        if (StringUtils.isNotEmpty(flight.getFlightIndex())) {
             updatedFlight.setFlightIndex(flight.getFlightIndex());
         }
-        if (Objects.nonNull(flight.getGateId())){
-            var gate = gateRepository.findById(flight.getGateId()).orElseThrow(() -> {
-                return new RuntimeException("Gate not found");
-            });
+        if (nonNull(flight.getGateId())) {
+            var gate = gateRepository.findById(flight.getGateId()).orElseThrow(() ->
+                    new RuntimeException("Gate not found"));
             updatedFlight.setGate(gate);
         }
         flightRepository.save(updatedFlight);
@@ -62,9 +62,7 @@ public class FlightServiceImp implements FlightService {
 
     @Override
     public void delete(Integer id) {
-        var flight = flightRepository.findById(id).orElseThrow(() -> {
-            return new RuntimeException("Flight not found");
-        });
+        var flight = flightRepository.findById(id).orElseThrow(() -> new RuntimeException("Flight not found"));
         flightRepository.delete(flight);
     }
 

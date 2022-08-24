@@ -20,7 +20,7 @@ public interface FlightService {
      * @param id
      * @return Flight entity if exists
      */
-    public Optional<Flight> getById(Integer id);
+    public Optional<Flight> findById(Integer id);
 
     /**
      * Create new Flight entity

@@ -19,7 +19,7 @@ public interface AirportService {
      * @param id
      * @return Airport entity if exists
      */
-    public Optional<Airport> getById(Integer id);
+    public Optional<Airport> findById(Integer id);
 
     /**
      * Create new airport

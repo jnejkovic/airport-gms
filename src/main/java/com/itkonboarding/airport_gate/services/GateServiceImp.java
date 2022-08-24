@@ -6,10 +6,12 @@ import com.itkonboarding.airport_gate.entities.Gate;
 import com.itkonboarding.airport_gate.repositories.AirportRepository;
 import com.itkonboarding.airport_gate.repositories.GateRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Objects;
 import java.util.Optional;
+
+import static java.util.Objects.nonNull;
 
 /**
  * Implementation of {@link GateService}
@@ -25,7 +27,7 @@ public class GateServiceImp implements GateService {
     private final AirportRepository airportRepository;
 
     @Override
-    public Optional<Gate> getById(Integer id) {
+    public Optional<Gate> findById(Integer id) {
         return gateRepository.findById(id);
     }
 
@@ -33,9 +35,7 @@ public class GateServiceImp implements GateService {
     public Gate create(GateRequestDto gate) {
         var newGate = new Gate();
         newGate.setGateName(gate.getGateName());
-        var airport = airportRepository.findById(gate.getAirportId()).orElseThrow(() -> {
-            return new RuntimeException("Airport not found");
-        });
+        var airport = airportRepository.findById(gate.getAirportId()).orElseThrow(() -> new RuntimeException("Airport not found"));
         newGate.setAirport(airport);
         gateRepository.save(newGate);
         return newGate;
@@ -46,13 +46,11 @@ public class GateServiceImp implements GateService {
         var updatedGate = gateRepository.findById(id).orElseThrow(() -> {
             return new RuntimeException("Gate not found");
         });
-        if (!gate.getGateName().isEmpty()) {
+        if (StringUtils.isNotEmpty(gate.getGateName())) {
             updatedGate.setGateName(gate.getGateName());
         }
-        if (Objects.nonNull(gate.getAirportId())) {
-            var airport = airportRepository.findById(gate.getAirportId()).orElseThrow(() -> {
-                return new RuntimeException("Airport not found");
-            });
+        if (nonNull(gate.getAirportId())) {
+            var airport = airportRepository.findById(gate.getAirportId()).orElseThrow(() -> new RuntimeException("Airport not found"));
             updatedGate.setAirport(airport);
         }
         gateRepository.save(updatedGate);

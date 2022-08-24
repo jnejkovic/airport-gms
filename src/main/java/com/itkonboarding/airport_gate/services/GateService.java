@@ -19,7 +19,7 @@ public interface GateService {
      * @param id
      * @return Gate entity if exists
      */
-    public Optional<Gate> getById(Integer id);
+    public Optional<Gate> findById(Integer id);
 
     /**
      * Create new Gate entity

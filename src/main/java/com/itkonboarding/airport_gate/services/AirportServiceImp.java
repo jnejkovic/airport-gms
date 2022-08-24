@@ -21,7 +21,7 @@ public class AirportServiceImp implements AirportService {
     private final AirportRepository airportRepository;
 
     @Override
-    public Optional<Airport> getById(Integer id) {
+    public Optional<Airport> findById(Integer id) {
         return airportRepository.findById(id);
     }
 
@@ -35,18 +35,15 @@ public class AirportServiceImp implements AirportService {
 
     @Override
     public Airport update(Integer id, AirportRequestDto airport) {
-        var updatedAirport = airportRepository.findById(id).orElseThrow(() -> {
-            return new RuntimeException("Airport not found");
-        });
+        var updatedAirport = airportRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("Airport not found"));
         airportRepository.save(updatedAirport);
         return updatedAirport;
     }
 
     @Override
     public void delete(Integer id) {
-        var airport = airportRepository.findById(id).orElseThrow(() -> {
-            return new RuntimeException("Airport not found");
-        });
+        var airport = airportRepository.findById(id).orElseThrow(() -> new RuntimeException("Airport not found"));
         airportRepository.delete(airport);
     }
 
