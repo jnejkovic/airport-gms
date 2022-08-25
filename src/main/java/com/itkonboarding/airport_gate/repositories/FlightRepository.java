@@ -1,7 +1,12 @@
 package com.itkonboarding.airport_gate.repositories;
 
 import com.itkonboarding.airport_gate.entities.Flight;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface FlightRepository extends CrudRepository<Flight, Integer> {
+/**
+ * Repository for Flight entity {@link Flight}
+ *
+ * @author jnejkovic
+ */
+public interface FlightRepository extends JpaRepository<Flight, Integer> {
 }

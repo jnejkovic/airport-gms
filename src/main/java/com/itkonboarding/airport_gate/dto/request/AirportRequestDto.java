@@ -2,8 +2,7 @@ package com.itkonboarding.airport_gate.dto.request;
 
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.NotBlank;
 
 /**
  * Airport Dto used for requests
@@ -13,5 +12,6 @@ import java.util.List;
 @Data
 public class AirportRequestDto {
 
+    @NotBlank(message = "Airport name must be provided")
     private String airportName;
 }
