@@ -28,7 +28,7 @@ public interface GateService {
      * @param gate
      * @return created Gate entity
      */
-    public GateResponseDto create(GateRequestDto gate);
+    public Gate create(Gate gate);
 
     /**
      * Update existing Gate entity
@@ -37,7 +37,7 @@ public interface GateService {
      * @param gate
      * @return updated Gate entity
      */
-    public GateResponseDto update(Integer id, GateUpdateRequestDto gate);
+    public Gate update( Integer id, Gate gate);
 
     /**
      * Delete Gate entity by id

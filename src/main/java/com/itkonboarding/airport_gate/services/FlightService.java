@@ -29,7 +29,7 @@ public interface FlightService {
      * @param flight
      * @return created Flight entity
      */
-    public FlightResponseDto create(FlightRequestDto flight);
+    public Flight create(Flight flight);
 
     /**
      * Update existing Flight entity
@@ -38,7 +38,7 @@ public interface FlightService {
      * @param flight
      * @return updated Flight entity
      */
-    public FlightResponseDto update(Integer id, FlightUpdateRequestDto flight);
+    public Flight update(Integer id, Flight flight);
 
     /**
      * Delete existing Flight entity
@@ -52,5 +52,5 @@ public interface FlightService {
      *
      * @return list of Flight entites
      */
-    public List<FlightResponseDto> getAll();
+    public List<Flight> getAll();
 }

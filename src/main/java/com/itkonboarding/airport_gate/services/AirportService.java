@@ -28,7 +28,7 @@ public interface AirportService {
      * @param airport
      * @return created Airport entity
      */
-    public AirportResponseDto create(AirportRequestDto airport);
+    public Airport create(Airport airport);
 
     /**
      * Update existing Airport entity
@@ -37,7 +37,7 @@ public interface AirportService {
      * @param airport
      * @return updated Airport entity
      */
-    public AirportResponseDto update(Integer id, AirportRequestDto airport);
+    public Airport update(Integer id, Airport airport);
 
     /**
      * Delete Airport entity
@@ -51,5 +51,5 @@ public interface AirportService {
      *
      * @return list of all Airport entities
      */
-    public List<AirportResponseDto> getAll();
+    public List<Airport> getAll();
 }

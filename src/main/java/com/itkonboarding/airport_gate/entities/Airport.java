@@ -23,7 +23,7 @@ public class Airport {
 
     @Id
     @GeneratedValue(strategy = AUTO)
-    @Column(name = "airport_id")
+    @Column(name = "airport_id", unique = true)
     private Integer id;
 
     @Column(nullable = false)

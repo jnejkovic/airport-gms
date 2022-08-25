@@ -1,10 +1,6 @@
 package com.itkonboarding.airport_gate.services;
 
-import com.itkonboarding.airport_gate.dto.request.GateRequestDto;
-import com.itkonboarding.airport_gate.dto.request.GateUpdateRequestDto;
-import com.itkonboarding.airport_gate.dto.response.GateResponseDto;
 import com.itkonboarding.airport_gate.entities.Gate;
-import com.itkonboarding.airport_gate.mappers.MapStructMapper;
 import com.itkonboarding.airport_gate.repositories.AirportRepository;
 import com.itkonboarding.airport_gate.repositories.GateRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,38 +24,33 @@ public class GateServiceImp implements GateService {
 
     private final AirportRepository airportRepository;
 
-    private final MapStructMapper mapStructMapper;
-
     @Override
     public Optional<Gate> findById(Integer id) {
         return gateRepository.findById(id);
     }
 
     @Override
-    public GateResponseDto create(GateRequestDto gate) {
-        var newGate = new Gate();
-        newGate.setGateName(gate.getGateName());
-        var airport = airportRepository.findById(gate.getAirportId()).orElseThrow(() -> new RuntimeException("Airport not found"));
-        newGate.setAirport(airport);
-        gateRepository.save(newGate);
-        return mapStructMapper.gateToGateResponseDto(newGate);
+    public Gate create(Gate gate) {
+        var airport = airportRepository.findById(gate.getAirport().getId()).orElseThrow(() -> new RuntimeException("Airport not found"));
+        gateRepository.save(gate);
+        return gate;
     }
 
     @Override
-    public GateResponseDto update(Integer id, GateUpdateRequestDto gate) {
+    public Gate update(Integer id, Gate gate) {
         var updatedGate = gateRepository.findById(id).orElseThrow(() -> new RuntimeException("Gate not found"));
 
         if (isNotBlank(gate.getGateName())) {
             updatedGate.setGateName(gate.getGateName());
         }
 
-        if (nonNull(gate.getAirportId())) {
-            var airport = airportRepository.findById(gate.getAirportId()).orElseThrow(() -> new RuntimeException("Airport not found"));
+        if (nonNull(gate.getAirport())) {
+            var airport = airportRepository.findById(gate.getAirport().getId()).orElseThrow(() -> new RuntimeException("Airport not found"));
             updatedGate.setAirport(airport);
         }
 
         gateRepository.save(updatedGate);
-        return mapStructMapper.gateToGateResponseDto(updatedGate);
+        return updatedGate;
     }
 
     @Override

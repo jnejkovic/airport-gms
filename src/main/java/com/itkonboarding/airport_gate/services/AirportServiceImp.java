@@ -1,9 +1,6 @@
 package com.itkonboarding.airport_gate.services;
 
-import com.itkonboarding.airport_gate.dto.request.AirportRequestDto;
-import com.itkonboarding.airport_gate.dto.response.AirportResponseDto;
 import com.itkonboarding.airport_gate.entities.Airport;
-import com.itkonboarding.airport_gate.mappers.MapStructMapper;
 import com.itkonboarding.airport_gate.repositories.AirportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,28 +19,24 @@ public class AirportServiceImp implements AirportService {
 
     private final AirportRepository airportRepository;
 
-    private final MapStructMapper mapStructMapper;
-
     @Override
     public Optional<Airport> findById(Integer id) {
         return airportRepository.findById(id);
     }
 
     @Override
-    public AirportResponseDto create(AirportRequestDto airport) {
-        var newAirport = new Airport();
-        newAirport.setAirportName(airport.getAirportName());
-        airportRepository.save(newAirport);
-        return mapStructMapper.airportToAirportResponseDto(newAirport);
+    public Airport create(Airport airport) {
+        airportRepository.save(airport);
+        return airport;
     }
 
     @Override
-    public AirportResponseDto update(Integer id, AirportRequestDto airport) {
+    public Airport update(Integer id, Airport airport) {
         var updatedAirport = airportRepository.findById(id).orElseThrow(() ->
                 new RuntimeException("Airport not found"));
         updatedAirport.setAirportName(airport.getAirportName());
         airportRepository.save(updatedAirport);
-        return mapStructMapper.airportToAirportResponseDto(updatedAirport);
+        return updatedAirport;
     }
 
     @Override
@@ -53,8 +46,7 @@ public class AirportServiceImp implements AirportService {
     }
 
     @Override
-    public List<AirportResponseDto> getAll() {
-        List<Airport> airports = airportRepository.findAll();
-        return mapStructMapper.airportsToAirportResponseDtos(airports);
+    public List<Airport> getAll() {
+        return airportRepository.findAll();
     }
 }
