@@ -2,7 +2,9 @@ package com.itkonboarding.airport_gate.services;
 
 import com.itkonboarding.airport_gate.dto.request.FlightRequestDto;
 import com.itkonboarding.airport_gate.dto.request.FlightUpdateRequestDto;
+import com.itkonboarding.airport_gate.dto.response.FlightResponseDto;
 import com.itkonboarding.airport_gate.entities.Flight;
+import com.itkonboarding.airport_gate.mappers.MapStructMapper;
 import com.itkonboarding.airport_gate.repositories.FlightRepository;
 import com.itkonboarding.airport_gate.repositories.GateRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,8 @@ public class FlightServiceImp implements FlightService {
 
     private final GateRepository gateRepository;
 
+    private final MapStructMapper mapStructMapper;
+
     @Override
     public Optional<Flight> findById(Integer id) {
         return flightRepository.findById(id);
@@ -32,19 +36,19 @@ public class FlightServiceImp implements FlightService {
 
     //TODO check if gate is available
     @Override
-    public Flight create(FlightRequestDto flight) {
+    public FlightResponseDto create(FlightRequestDto flight) {
         var newFlight = new Flight();
         newFlight.setFlightIndex(flight.getFlightIndex());
         var gate = gateRepository.findById(flight.getGateId()).orElseThrow(() ->
                 new RuntimeException("Gate not found"));
         newFlight.setGate(gate);
         flightRepository.save(newFlight);
-        return newFlight;
+        return mapStructMapper.flightToFlightResponseDto(newFlight);
     }
 
     //TODO check if gate is available
     @Override
-    public Flight update(Integer id, FlightUpdateRequestDto flight) {
+    public FlightResponseDto update(Integer id, FlightUpdateRequestDto flight) {
         var updatedFlight = flightRepository.findById(id).orElseThrow(() -> new RuntimeException("Flight not found"));
 
         if (isNotBlank(flight.getFlightIndex())) {
@@ -58,7 +62,7 @@ public class FlightServiceImp implements FlightService {
         }
 
         flightRepository.save(updatedFlight);
-        return updatedFlight;
+        return mapStructMapper.flightToFlightResponseDto(updatedFlight);
     }
 
     @Override
@@ -68,7 +72,8 @@ public class FlightServiceImp implements FlightService {
     }
 
     @Override
-    public List<Flight> getAll() {
-        return flightRepository.findAll();
+    public List<FlightResponseDto> getAll() {
+        List<Flight> flights = flightRepository.findAll();
+        return mapStructMapper.flightsToFlightResponseDtos(flights);
     }
 }

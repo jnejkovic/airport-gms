@@ -2,7 +2,9 @@ package com.itkonboarding.airport_gate.services;
 
 import com.itkonboarding.airport_gate.dto.request.GateRequestDto;
 import com.itkonboarding.airport_gate.dto.request.GateUpdateRequestDto;
+import com.itkonboarding.airport_gate.dto.response.GateResponseDto;
 import com.itkonboarding.airport_gate.entities.Gate;
+import com.itkonboarding.airport_gate.mappers.MapStructMapper;
 import com.itkonboarding.airport_gate.repositories.AirportRepository;
 import com.itkonboarding.airport_gate.repositories.GateRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,23 +28,25 @@ public class GateServiceImp implements GateService {
 
     private final AirportRepository airportRepository;
 
+    private final MapStructMapper mapStructMapper;
+
     @Override
     public Optional<Gate> findById(Integer id) {
         return gateRepository.findById(id);
     }
 
     @Override
-    public Gate create(GateRequestDto gate) {
+    public GateResponseDto create(GateRequestDto gate) {
         var newGate = new Gate();
         newGate.setGateName(gate.getGateName());
         var airport = airportRepository.findById(gate.getAirportId()).orElseThrow(() -> new RuntimeException("Airport not found"));
         newGate.setAirport(airport);
         gateRepository.save(newGate);
-        return newGate;
+        return mapStructMapper.gateToGateResponseDto(newGate);
     }
 
     @Override
-    public Gate update(Integer id, GateUpdateRequestDto gate) {
+    public GateResponseDto update(Integer id, GateUpdateRequestDto gate) {
         var updatedGate = gateRepository.findById(id).orElseThrow(() -> new RuntimeException("Gate not found"));
 
         if (isNotBlank(gate.getGateName())) {
@@ -55,7 +59,7 @@ public class GateServiceImp implements GateService {
         }
 
         gateRepository.save(updatedGate);
-        return updatedGate;
+        return mapStructMapper.gateToGateResponseDto(updatedGate);
     }
 
     @Override

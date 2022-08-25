@@ -2,6 +2,7 @@ package com.itkonboarding.airport_gate.controllers;
 
 import com.itkonboarding.airport_gate.dto.request.AirportRequestDto;
 import com.itkonboarding.airport_gate.dto.response.AirportResponseDto;
+import com.itkonboarding.airport_gate.dto.response.GateResponseDto;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class AirportController {
     }
 
     @GetMapping(value = "{airportId}/gates")
-    public List<AirportResponseDto> getAllAirportGates(@PathVariable Integer airportId) {
-        return new ArrayList<AirportResponseDto>();
+    public List<GateResponseDto> getAllAirportGates(@PathVariable Integer airportId) {
+        return new ArrayList<GateResponseDto>();
     }
 }
