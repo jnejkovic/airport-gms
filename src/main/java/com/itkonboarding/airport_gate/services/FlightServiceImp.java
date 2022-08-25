@@ -45,17 +45,18 @@ public class FlightServiceImp implements FlightService {
     //TODO check if gate is available
     @Override
     public Flight update(Integer id, FlightUpdateRequestDto flight) {
-        var updatedFlight = flightRepository.findById(id).orElseThrow(() -> {
-            return new RuntimeException("Flight not found");
-        });
+        var updatedFlight = flightRepository.findById(id).orElseThrow(() -> new RuntimeException("Flight not found"));
+
         if (isNotBlank(flight.getFlightIndex())) {
             updatedFlight.setFlightIndex(flight.getFlightIndex());
         }
+
         if (nonNull(flight.getGateId())) {
             var gate = gateRepository.findById(flight.getGateId()).orElseThrow(() ->
                     new RuntimeException("Gate not found"));
             updatedFlight.setGate(gate);
         }
+
         flightRepository.save(updatedFlight);
         return updatedFlight;
     }
