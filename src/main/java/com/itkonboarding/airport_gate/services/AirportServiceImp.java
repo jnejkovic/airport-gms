@@ -41,7 +41,8 @@ public class AirportServiceImp implements AirportService {
 
     @Override
     public void delete(Integer id) {
-        var airport = airportRepository.findById(id).orElseThrow(() -> new RuntimeException("Airport not found"));
+        var airport = airportRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Airport not found"));
         airportRepository.delete(airport);
     }
 

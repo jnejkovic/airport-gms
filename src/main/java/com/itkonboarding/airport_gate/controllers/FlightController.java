@@ -35,8 +35,9 @@ public class FlightController {
      */
     @GetMapping("{id}")
     public FlightResponseDto get(@PathVariable Integer id) {
-        var flight = flightService.findById(id).map(flightMapper::flightToFlightResponseDto);
-        return flight.orElseThrow(() -> new RuntimeException("Flight not found"));
+        return flightService.findById(id)
+                .map(flightMapper::flightToFlightResponseDto)
+                .orElseThrow(() -> new RuntimeException("Flight not found"));
     }
 
     /**
@@ -83,12 +84,18 @@ public class FlightController {
      */
     @GetMapping
     public List<FlightResponseDto> getAll() {
-        return flightMapper.flightsToFlightResponseDtos(flightService.getAll());
+        return flightService.getAll().stream().map(flightMapper::flightToFlightResponseDto).toList();
     }
 
-    //TODO to be done
+    /**
+     * Add flight to available gate
+     *
+     * @param gateId
+     * @param flightId
+     * @return Flight details
+     */
     @PutMapping(value = "{flightId}/gate/{gateId}")
     public FlightResponseDto addFlightToGate(@PathVariable Integer gateId, @PathVariable Integer flightId) {
-        return new FlightResponseDto();
+        return flightMapper.flightToFlightResponseDto(flightService.addFlightToGate(gateId, flightId));
     }
 }

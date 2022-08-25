@@ -1,10 +1,8 @@
 package com.itkonboarding.airport_gate.services;
 
-import com.itkonboarding.airport_gate.dto.request.GateRequestDto;
-import com.itkonboarding.airport_gate.dto.request.GateUpdateRequestDto;
-import com.itkonboarding.airport_gate.dto.response.GateResponseDto;
 import com.itkonboarding.airport_gate.entities.Gate;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -37,7 +35,7 @@ public interface GateService {
      * @param gate
      * @return updated Gate entity
      */
-    public Gate update( Integer id, Gate gate);
+    public Gate update(Integer id, Gate gate);
 
     /**
      * Delete Gate entity by id
@@ -45,4 +43,29 @@ public interface GateService {
      * @param id
      */
     public void delete(Integer id);
+
+    /**
+     * Get all airport gates
+     *
+     * @param id
+     * @return List of airport gates
+     */
+    public List<Gate> getAllGatesForAirport(Integer id);
+
+    /**
+     * Add gate to airport
+     *
+     * @param gateId
+     * @param airportId
+     * @return Added gate details
+     */
+    public Gate addGateToAirport(Integer airportId, Integer gateId);
+
+    /**
+     * Set that gate is available
+     *
+     * @param id
+     * @return Updated gate details
+     */
+    public Gate updateStatus(Integer id);
 }

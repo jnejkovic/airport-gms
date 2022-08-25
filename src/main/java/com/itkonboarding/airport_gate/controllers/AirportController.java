@@ -2,13 +2,11 @@ package com.itkonboarding.airport_gate.controllers;
 
 import com.itkonboarding.airport_gate.dto.request.AirportRequestDto;
 import com.itkonboarding.airport_gate.dto.response.AirportResponseDto;
-import com.itkonboarding.airport_gate.dto.response.GateResponseDto;
 import com.itkonboarding.airport_gate.mappers.AirportMapper;
 import com.itkonboarding.airport_gate.services.AirportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -24,9 +22,9 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 @RequiredArgsConstructor
 public class AirportController {
 
-    private final AirportMapper airportMapper;
-
     private final AirportService airportService;
+
+    private final AirportMapper airportMapper;
 
     /**
      * Create airport
@@ -62,8 +60,9 @@ public class AirportController {
      */
     @GetMapping(value = "{id}")
     public AirportResponseDto get(@PathVariable Integer id) {
-        var airport = airportService.findById(id).map(airportMapper::airportToAirportResponseDto);
-        return airport.orElseThrow(() -> new RuntimeException("Airport not found"));
+        return airportService.findById(id)
+                .map(airportMapper::airportToAirportResponseDto)
+                .orElseThrow(() -> new RuntimeException("Airport not found"));
     }
 
     /**
@@ -84,12 +83,6 @@ public class AirportController {
      */
     @GetMapping
     public List<AirportResponseDto> getAll() {
-        return airportMapper.airportsToAirportResponseDtos(airportService.getAll());
-    }
-
-    //TODO implement this
-    @GetMapping(value = "{airportId}/gates")
-    public List<GateResponseDto> getAllAirportGates(@PathVariable Integer airportId) {
-        return new ArrayList<GateResponseDto>();
+        return airportService.getAll().stream().map(airportMapper::airportToAirportResponseDto).toList();
     }
 }

@@ -8,6 +8,8 @@ import com.itkonboarding.airport_gate.services.GateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
@@ -33,8 +35,9 @@ public class GateController {
      */
     @GetMapping("{id}")
     public GateResponseDto get(@PathVariable Integer id) {
-        var gate = gateService.findById(id).map(gateMapper::gateToGateResponseDto);
-        return gate.orElseThrow(() -> new RuntimeException("Gate not found"));
+        return gateService.findById(id)
+                .map(gateMapper::gateToGateResponseDto)
+                .orElseThrow(() -> new RuntimeException("Gate not found"));
     }
 
     /**
@@ -63,10 +66,15 @@ public class GateController {
         return gateMapper.gateToGateResponseDto(gate);
     }
 
-    //TODO to be done
+    /**
+     * Set that gate is available
+     *
+     * @param id
+     * @return Updated gate details
+     */
     @PutMapping(value = "{id}/available")
     public GateResponseDto updateStatus(@PathVariable Integer id) {
-        return new GateResponseDto();
+        return gateMapper.gateToGateResponseDto(gateService.updateStatus(id));
     }
 
     /**
@@ -80,9 +88,26 @@ public class GateController {
         gateService.delete(id);
     }
 
-    //TODO to be done
+    /**
+     * Add gate to airport
+     *
+     * @param airportId
+     * @param gateId
+     * @return Added gate details
+     */
     @PutMapping(value = "{gateId}/airport/{airportId}")
     public GateResponseDto addGateToAirport(@PathVariable Integer airportId, @PathVariable Integer gateId) {
-        return new GateResponseDto();
+        return gateMapper.gateToGateResponseDto(gateService.addGateToAirport(airportId, gateId));
+    }
+
+    /**
+     * Get all airport gates
+     *
+     * @param id
+     * @return List of all airport gates
+     */
+    @GetMapping(value = "{airportId}/gates")
+    public List<GateResponseDto> getAllGatesForAirport(@PathVariable Integer id) {
+        return gateService.getAllGatesForAirport(id).stream().map(gateMapper::gateToGateResponseDto).toList();
     }
 }

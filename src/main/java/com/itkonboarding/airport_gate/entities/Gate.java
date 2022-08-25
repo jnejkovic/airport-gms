@@ -31,7 +31,7 @@ public class Gate {
     @Column(name = "gate_id")
     private Integer id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String gateName;
 
     @ManyToOne(cascade = REFRESH, fetch = LAZY)

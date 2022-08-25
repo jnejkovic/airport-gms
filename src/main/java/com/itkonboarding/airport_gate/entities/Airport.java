@@ -23,10 +23,10 @@ public class Airport {
 
     @Id
     @GeneratedValue(strategy = AUTO)
-    @Column(name = "airport_id", unique = true)
+    @Column(name = "airport_id")
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String airportName;
 
     @JsonIgnore

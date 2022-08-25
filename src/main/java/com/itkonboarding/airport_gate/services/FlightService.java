@@ -1,8 +1,5 @@
 package com.itkonboarding.airport_gate.services;
 
-import com.itkonboarding.airport_gate.dto.request.FlightRequestDto;
-import com.itkonboarding.airport_gate.dto.request.FlightUpdateRequestDto;
-import com.itkonboarding.airport_gate.dto.response.FlightResponseDto;
 import com.itkonboarding.airport_gate.entities.Flight;
 
 import java.util.List;
@@ -53,4 +50,13 @@ public interface FlightService {
      * @return list of Flight entites
      */
     public List<Flight> getAll();
+
+    /**
+     * Add flight to gate
+     *
+     * @param gateId
+     * @param flightId
+     * @return Added flight details
+     */
+    public Flight addFlightToGate(Integer gateId, Integer flightId);
 }
