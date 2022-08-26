@@ -42,8 +42,6 @@ public class Gate {
     @OneToMany(mappedBy = "gate", cascade = REFRESH)
     private List<Flight> flights = new ArrayList<>();
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private Status status;
 
     @Version

@@ -30,23 +30,27 @@ public class GateServiceImp implements GateService {
     }
 
     @Override
-    public Gate create(Gate gate) {
-        var airport = airportService.findById(gate.getAirport().getId()).orElseThrow(() ->
-                new RuntimeException("Airport not found"));
+    public Gate create(Integer airportId, Gate gate) {
+        if (nonNull(airportId)) {
+            var airport = airportService.findById(airportId).orElseThrow(() ->
+                    new RuntimeException("Airport not found"));
+            gate.setAirport(airport);
+        }
+        gate.setStatus(Gate.Status.AVAILABLE);
         gateRepository.save(gate);
         return gate;
     }
 
     @Override
-    public Gate update(Integer id, Gate gate) {
-        var updatedGate = gateRepository.findById(id).orElseThrow(() -> new RuntimeException("Gate not found"));
+    public Gate update(Integer gateId, Integer airportId, Gate gate) {
+        var updatedGate = gateRepository.findById(gateId).orElseThrow(() -> new RuntimeException("Gate not found"));
 
         if (isNotBlank(gate.getGateName())) {
             updatedGate.setGateName(gate.getGateName());
         }
 
-        if (nonNull(gate.getAirport())) {
-            var airport = airportService.findById(gate.getAirport().getId()).orElseThrow(() ->
+        if (nonNull(airportId)) {
+            var airport = airportService.findById(airportId).orElseThrow(() ->
                     new RuntimeException("Airport not found"));
             updatedGate.setAirport(airport);
         }
@@ -82,6 +86,13 @@ public class GateServiceImp implements GateService {
     public Gate updateStatus(Integer id) {
         var gate = gateRepository.findById(id).orElseThrow(() -> new RuntimeException("Gate not found"));
         gate.setStatus(Gate.Status.AVAILABLE);
+        gateRepository.save(gate);
         return gate;
+    }
+
+    @Override
+    public void setUnavailable(Gate gate) {
+        gate.setStatus(Gate.Status.UNAVAILABLE);
+        gateRepository.save(gate);
     }
 }

@@ -28,32 +28,29 @@ public class FlightServiceImp implements FlightService {
         return flightRepository.findById(id);
     }
 
-    //TODO check if gate is available
     @Override
     public Flight create(Flight flight) {
-        var gate = gateService.findById(flight.getGate().getId()).orElseThrow(() ->
-                new RuntimeException("Gate not found"));
         flightRepository.save(flight);
         return flight;
     }
 
     @Override
-    public Flight update(Integer id, Flight flight) {
-        var updatedFlight = flightRepository.findById(id).orElseThrow(() ->
+    public Flight update(Integer flightId, Integer gateId, Flight flight) {
+        var updatedFlight = flightRepository.findById(flightId).orElseThrow(() ->
                 new RuntimeException("Flight not found"));
 
         if (isNotBlank(flight.getFlightIndex())) {
             updatedFlight.setFlightIndex(flight.getFlightIndex());
         }
 
-        if (nonNull(flight.getGate())) {
-            var gate = gateService.findById(flight.getGate().getId()).orElseThrow(() ->
+        if (nonNull(gateId)) {
+            var gate = gateService.findById(gateId).orElseThrow(() ->
                     new RuntimeException("Gate not found"));
 
-            if (gate.getStatus().equals(Gate.Status.UNAVAILABLE.toString())) {
-                new RuntimeException("Gate isn't available");
+            if (gate.getStatus().toString().equals(Gate.Status.UNAVAILABLE.toString())) {
+                throw new RuntimeException("Gate isn't available");
             }
-
+            gate.setStatus(Gate.Status.UNAVAILABLE);
             updatedFlight.setGate(gate);
         }
 
@@ -79,11 +76,12 @@ public class FlightServiceImp implements FlightService {
         var flight = flightRepository.findById(flightId).orElseThrow(() ->
                 new RuntimeException("Flight not found"));
 
-        if (gate.getStatus().equals(Gate.Status.UNAVAILABLE.toString())) {
-            new RuntimeException("Gate isn't available");
+        if (gate.getStatus().toString().equals(Gate.Status.UNAVAILABLE.toString())) {
+            throw new RuntimeException("Gate isn't available");
         }
 
         flight.setGate(gate);
+        gateService.setUnavailable(gate);
         flightRepository.save(flight);
         return flight;
     }

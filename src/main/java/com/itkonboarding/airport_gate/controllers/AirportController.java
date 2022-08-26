@@ -2,11 +2,13 @@ package com.itkonboarding.airport_gate.controllers;
 
 import com.itkonboarding.airport_gate.dto.request.AirportRequestDto;
 import com.itkonboarding.airport_gate.dto.response.AirportResponseDto;
+import com.itkonboarding.airport_gate.entities.Airport;
 import com.itkonboarding.airport_gate.mappers.AirportMapper;
 import com.itkonboarding.airport_gate.services.AirportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -34,7 +36,7 @@ public class AirportController {
      */
     @PostMapping
     @ResponseStatus(CREATED)
-    public AirportResponseDto create(@RequestBody AirportRequestDto newAirport) {
+    public AirportResponseDto create(@Valid @RequestBody AirportRequestDto newAirport) {
         var airport = airportService.create(airportMapper.airportRequestDtoToAirport(newAirport));
         return airportMapper.airportToAirportResponseDto(airport);
     }
@@ -47,7 +49,7 @@ public class AirportController {
      * @return Updated airport details
      */
     @PutMapping(value = "{id}")
-    public AirportResponseDto update(@PathVariable Integer id, @RequestBody AirportRequestDto updateAirport) {
+    public AirportResponseDto update(@PathVariable Integer id, @Valid @RequestBody AirportRequestDto updateAirport) {
         var airport = airportService.update(id, airportMapper.airportRequestDtoToAirport(updateAirport));
         return airportMapper.airportToAirportResponseDto(airport);
     }
@@ -83,6 +85,7 @@ public class AirportController {
      */
     @GetMapping
     public List<AirportResponseDto> getAll() {
+        List<Airport> airports=airportService.getAll();
         return airportService.getAll().stream().map(airportMapper::airportToAirportResponseDto).toList();
     }
 }

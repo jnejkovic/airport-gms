@@ -10,5 +10,5 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_PASSWORD=password
-      - MYSQL_USER=jnejkovic
+      - MYSQL_USER=root
       - MYSQL_DATABASE=airport_gate

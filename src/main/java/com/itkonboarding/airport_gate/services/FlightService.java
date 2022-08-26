@@ -35,7 +35,7 @@ public interface FlightService {
      * @param flight
      * @return updated Flight entity
      */
-    public Flight update(Integer id, Flight flight);
+    public Flight update(Integer flightId, Integer gateId, Flight flight);
 
     /**
      * Delete existing Flight entity

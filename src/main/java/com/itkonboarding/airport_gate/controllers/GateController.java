@@ -8,6 +8,7 @@ import com.itkonboarding.airport_gate.services.GateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -48,8 +49,8 @@ public class GateController {
      */
     @PostMapping
     @ResponseStatus(CREATED)
-    public GateResponseDto create(@RequestBody GateRequestDto newGate) {
-        var gate = gateService.create(gateMapper.gateRequestDtoToGate(newGate));
+    public GateResponseDto create(@Valid @RequestBody GateRequestDto newGate) {
+        var gate = gateService.create(newGate.getAirportId(), gateMapper.gateRequestDtoToGate(newGate));
         return gateMapper.gateToGateResponseDto(gate);
     }
 
@@ -61,8 +62,8 @@ public class GateController {
      * @return Updated gate details
      */
     @PutMapping(value = "{id}")
-    public GateResponseDto update(@PathVariable Integer id, @RequestBody GateUpdateRequestDto newGate) {
-        var gate = gateService.update(id, gateMapper.gateUpdateRequestDtoToGate(newGate));
+    public GateResponseDto update(@PathVariable Integer id, @Valid @RequestBody GateUpdateRequestDto newGate) {
+        var gate = gateService.update(id, newGate.getAirportId(), gateMapper.gateUpdateRequestDtoToGate(newGate));
         return gateMapper.gateToGateResponseDto(gate);
     }
 
@@ -106,7 +107,7 @@ public class GateController {
      * @param id
      * @return List of all airport gates
      */
-    @GetMapping(value = "{airportId}/gates")
+    @GetMapping(value = "{id}/gates")
     public List<GateResponseDto> getAllGatesForAirport(@PathVariable Integer id) {
         return gateService.getAllGatesForAirport(id).stream().map(gateMapper::gateToGateResponseDto).toList();
     }

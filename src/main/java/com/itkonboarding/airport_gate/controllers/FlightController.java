@@ -8,6 +8,7 @@ import com.itkonboarding.airport_gate.services.FlightService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -48,7 +49,7 @@ public class FlightController {
      */
     @PostMapping
     @ResponseStatus(CREATED)
-    public FlightResponseDto create(@RequestBody FlightRequestDto newFlight) {
+    public FlightResponseDto create(@Valid @RequestBody FlightRequestDto newFlight) {
         var flight = flightService.create(flightMapper.flightRequestDtoToFlight(newFlight));
         return flightMapper.flightToFlightResponseDto(flight);
     }
@@ -61,8 +62,8 @@ public class FlightController {
      * @return Updated flight details
      */
     @PutMapping(value = "{id}")
-    public FlightResponseDto update(@PathVariable Integer id, @RequestBody FlightUpdateRequestDto newFlight) {
-        var flight = flightService.update(id, flightMapper.flightUpdateRequestDtoToFlight(newFlight));
+    public FlightResponseDto update(@PathVariable Integer id, @Valid @RequestBody FlightUpdateRequestDto newFlight) {
+        var flight = flightService.update(id, newFlight.getGateId(), flightMapper.flightUpdateRequestDtoToFlight(newFlight));
         return flightMapper.flightToFlightResponseDto(flight);
     }
 

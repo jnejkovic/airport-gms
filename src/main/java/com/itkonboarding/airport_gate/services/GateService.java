@@ -26,7 +26,7 @@ public interface GateService {
      * @param gate
      * @return created Gate entity
      */
-    public Gate create(Gate gate);
+    public Gate create(Integer id, Gate gate);
 
     /**
      * Update existing Gate entity
@@ -35,7 +35,7 @@ public interface GateService {
      * @param gate
      * @return updated Gate entity
      */
-    public Gate update(Integer id, Gate gate);
+    public Gate update(Integer gateId, Integer airportId, Gate gate);
 
     /**
      * Delete Gate entity by id
@@ -68,4 +68,11 @@ public interface GateService {
      * @return Updated gate details
      */
     public Gate updateStatus(Integer id);
+
+    /**
+     * Set gate unavailable
+     *
+     * @param gate
+     */
+    public void setUnavailable(Gate gate);
 }
