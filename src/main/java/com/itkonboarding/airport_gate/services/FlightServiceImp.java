@@ -1,7 +1,6 @@
 package com.itkonboarding.airport_gate.services;
 
 import com.itkonboarding.airport_gate.entities.Flight;
-import com.itkonboarding.airport_gate.entities.Gate;
 import com.itkonboarding.airport_gate.repositories.FlightRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static com.itkonboarding.airport_gate.entities.Gate.Status.UNAVAILABLE;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -30,8 +30,7 @@ public class FlightServiceImp implements FlightService {
 
     @Override
     public Flight create(Flight flight) {
-        flightRepository.save(flight);
-        return flight;
+        return flightRepository.save(flight);
     }
 
     @Override
@@ -47,15 +46,14 @@ public class FlightServiceImp implements FlightService {
             var gate = gateService.findById(gateId).orElseThrow(() ->
                     new RuntimeException("Gate not found"));
 
-            if (gate.getStatus().toString().equals(Gate.Status.UNAVAILABLE.toString())) {
+            if (gate.getStatus().equals(UNAVAILABLE)) {
                 throw new RuntimeException("Gate isn't available");
             }
-            gate.setStatus(Gate.Status.UNAVAILABLE);
+            gateService.setUnavailable(gate);
             updatedFlight.setGate(gate);
         }
 
-        flightRepository.save(updatedFlight);
-        return updatedFlight;
+        return flightRepository.save(updatedFlight);
     }
 
     @Override
@@ -76,13 +74,13 @@ public class FlightServiceImp implements FlightService {
         var flight = flightRepository.findById(flightId).orElseThrow(() ->
                 new RuntimeException("Flight not found"));
 
-        if (gate.getStatus().toString().equals(Gate.Status.UNAVAILABLE.toString())) {
+        if (gate.getStatus().equals(UNAVAILABLE)) {
             throw new RuntimeException("Gate isn't available");
         }
 
         flight.setGate(gate);
         gateService.setUnavailable(gate);
-        flightRepository.save(flight);
-        return flight;
+
+        return flightRepository.save(flight);
     }
 }

@@ -74,8 +74,8 @@ public class GateController {
      * @return Updated gate details
      */
     @PutMapping(value = "{id}/available")
-    public GateResponseDto updateStatus(@PathVariable Integer id) {
-        return gateMapper.gateToGateResponseDto(gateService.updateStatus(id));
+    public GateResponseDto makeAvailable(@PathVariable Integer id) {
+        return gateMapper.gateToGateResponseDto(gateService.makeAvailable(id));
     }
 
     /**

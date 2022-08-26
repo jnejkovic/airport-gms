@@ -26,8 +26,7 @@ public class AirportServiceImp implements AirportService {
 
     @Override
     public Airport create(Airport airport) {
-        airportRepository.save(airport);
-        return airport;
+        return airportRepository.save(airport);
     }
 
     @Override
@@ -35,8 +34,8 @@ public class AirportServiceImp implements AirportService {
         var updatedAirport = airportRepository.findById(id).orElseThrow(() ->
                 new RuntimeException("Airport not found"));
         updatedAirport.setAirportName(airport.getAirportName());
-        airportRepository.save(updatedAirport);
-        return updatedAirport;
+
+        return airportRepository.save(updatedAirport);
     }
 
     @Override

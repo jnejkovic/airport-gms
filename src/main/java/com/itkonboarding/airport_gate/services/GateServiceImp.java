@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+import static com.itkonboarding.airport_gate.entities.Gate.Status.AVAILABLE;
+import static com.itkonboarding.airport_gate.entities.Gate.Status.UNAVAILABLE;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -36,9 +38,8 @@ public class GateServiceImp implements GateService {
                     new RuntimeException("Airport not found"));
             gate.setAirport(airport);
         }
-        gate.setStatus(Gate.Status.AVAILABLE);
-        gateRepository.save(gate);
-        return gate;
+        gate.setStatus(AVAILABLE);
+        return gateRepository.save(gate);
     }
 
     @Override
@@ -55,8 +56,7 @@ public class GateServiceImp implements GateService {
             updatedGate.setAirport(airport);
         }
 
-        gateRepository.save(updatedGate);
-        return updatedGate;
+        return gateRepository.save(updatedGate);
     }
 
     @Override
@@ -69,6 +69,7 @@ public class GateServiceImp implements GateService {
     public List<Gate> getAllGatesForAirport(Integer id) {
         var airport = airportService.findById(id)
                 .orElseThrow(() -> new RuntimeException("Airport not found"));
+
         return airport.getGates();
     }
 
@@ -78,21 +79,21 @@ public class GateServiceImp implements GateService {
                 .orElseThrow(() -> new RuntimeException("Airport not found"));
         var gate = gateRepository.findById(gateId).orElseThrow(() -> new RuntimeException("Gate not found"));
         gate.setAirport(airport);
-        gateRepository.save(gate);
-        return gate;
+
+        return gateRepository.save(gate);
     }
 
     @Override
-    public Gate updateStatus(Integer id) {
+    public Gate makeAvailable(Integer id) {
         var gate = gateRepository.findById(id).orElseThrow(() -> new RuntimeException("Gate not found"));
-        gate.setStatus(Gate.Status.AVAILABLE);
-        gateRepository.save(gate);
-        return gate;
+        gate.setStatus(AVAILABLE);
+
+        return gateRepository.save(gate);
     }
 
     @Override
     public void setUnavailable(Gate gate) {
-        gate.setStatus(Gate.Status.UNAVAILABLE);
+        gate.setStatus(UNAVAILABLE);
         gateRepository.save(gate);
     }
 }

@@ -2,7 +2,6 @@ package com.itkonboarding.airport_gate.controllers;
 
 import com.itkonboarding.airport_gate.dto.request.AirportRequestDto;
 import com.itkonboarding.airport_gate.dto.response.AirportResponseDto;
-import com.itkonboarding.airport_gate.entities.Airport;
 import com.itkonboarding.airport_gate.mappers.AirportMapper;
 import com.itkonboarding.airport_gate.services.AirportService;
 import lombok.RequiredArgsConstructor;
@@ -85,7 +84,6 @@ public class AirportController {
      */
     @GetMapping
     public List<AirportResponseDto> getAll() {
-        List<Airport> airports=airportService.getAll();
         return airportService.getAll().stream().map(airportMapper::airportToAirportResponseDto).toList();
     }
 }

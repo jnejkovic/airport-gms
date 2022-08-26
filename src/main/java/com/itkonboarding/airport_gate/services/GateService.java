@@ -67,7 +67,7 @@ public interface GateService {
      * @param id
      * @return Updated gate details
      */
-    public Gate updateStatus(Integer id);
+    public Gate makeAvailable(Integer id);
 
     /**
      * Set gate unavailable
