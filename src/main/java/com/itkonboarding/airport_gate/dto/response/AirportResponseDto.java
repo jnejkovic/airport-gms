@@ -1,6 +1,5 @@
 package com.itkonboarding.airport_gate.dto.response;
 
-import com.itkonboarding.airport_gate.dto.request.GateRequestDto;
 import lombok.Data;
 
 import java.util.ArrayList;

@@ -1,6 +1,5 @@
 package com.itkonboarding.airport_gate.services;
 
-import com.itkonboarding.airport_gate.dto.request.AirportRequestDto;
 import com.itkonboarding.airport_gate.entities.Airport;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public interface AirportService {
      * @param airport
      * @return created Airport entity
      */
-    public Airport create(AirportRequestDto airport);
+    public Airport create(Airport airport);
 
     /**
      * Update existing Airport entity
@@ -36,7 +35,7 @@ public interface AirportService {
      * @param airport
      * @return updated Airport entity
      */
-    public Airport update(Integer id, AirportRequestDto airport);
+    public Airport update(Integer id, Airport airport);
 
     /**
      * Delete Airport entity

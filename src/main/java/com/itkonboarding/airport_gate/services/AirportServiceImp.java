@@ -1,6 +1,5 @@
 package com.itkonboarding.airport_gate.services;
 
-import com.itkonboarding.airport_gate.dto.request.AirportRequestDto;
 import com.itkonboarding.airport_gate.entities.Airport;
 import com.itkonboarding.airport_gate.repositories.AirportRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,24 +25,23 @@ public class AirportServiceImp implements AirportService {
     }
 
     @Override
-    public Airport create(AirportRequestDto airport) {
-        var newAirport = new Airport();
-        newAirport.setAirportName(airport.getAirportName());
-        airportRepository.save(newAirport);
-        return newAirport;
+    public Airport create(Airport airport) {
+        return airportRepository.save(airport);
     }
 
     @Override
-    public Airport update(Integer id, AirportRequestDto airport) {
+    public Airport update(Integer id, Airport airport) {
         var updatedAirport = airportRepository.findById(id).orElseThrow(() ->
                 new RuntimeException("Airport not found"));
-        airportRepository.save(updatedAirport);
-        return updatedAirport;
+        updatedAirport.setAirportName(airport.getAirportName());
+
+        return airportRepository.save(updatedAirport);
     }
 
     @Override
     public void delete(Integer id) {
-        var airport = airportRepository.findById(id).orElseThrow(() -> new RuntimeException("Airport not found"));
+        var airport = airportRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Airport not found"));
         airportRepository.delete(airport);
     }
 

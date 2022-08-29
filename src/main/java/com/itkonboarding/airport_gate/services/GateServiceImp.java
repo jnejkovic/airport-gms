@@ -1,15 +1,15 @@
 package com.itkonboarding.airport_gate.services;
 
-import com.itkonboarding.airport_gate.dto.request.GateRequestDto;
-import com.itkonboarding.airport_gate.dto.request.GateUpdateRequestDto;
 import com.itkonboarding.airport_gate.entities.Gate;
-import com.itkonboarding.airport_gate.repositories.AirportRepository;
 import com.itkonboarding.airport_gate.repositories.GateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
+import static com.itkonboarding.airport_gate.entities.Gate.Status.AVAILABLE;
+import static com.itkonboarding.airport_gate.entities.Gate.Status.UNAVAILABLE;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -24,7 +24,7 @@ public class GateServiceImp implements GateService {
 
     private final GateRepository gateRepository;
 
-    private final AirportRepository airportRepository;
+    private final AirportService airportService;
 
     @Override
     public Optional<Gate> findById(Integer id) {
@@ -32,37 +32,58 @@ public class GateServiceImp implements GateService {
     }
 
     @Override
-    public Gate create(GateRequestDto gate) {
-        var newGate = new Gate();
-        newGate.setGateName(gate.getGateName());
-        var airport = airportRepository.findById(gate.getAirportId()).orElseThrow(() -> new RuntimeException("Airport not found"));
-        newGate.setAirport(airport);
-        gateRepository.save(newGate);
-        return newGate;
+    public Gate create(Integer airportId, Gate gate) {
+        if (nonNull(airportId)) {
+            var airport = airportService.findById(airportId).orElseThrow(() ->
+                    new RuntimeException("Airport not found"));
+            gate.setAirport(airport);
+        }
+        gate.setStatus(AVAILABLE);
+        return gateRepository.save(gate);
     }
 
     @Override
-    public Gate update(Integer id, GateUpdateRequestDto gate) {
-        var updatedGate = gateRepository.findById(id).orElseThrow(() -> new RuntimeException("Gate not found"));
+    public Gate update(Integer gateId, Integer airportId, Gate gate) {
+        var updatedGate = gateRepository.findById(gateId).orElseThrow(() -> new RuntimeException("Gate not found"));
 
         if (isNotBlank(gate.getGateName())) {
             updatedGate.setGateName(gate.getGateName());
         }
 
-        if (nonNull(gate.getAirportId())) {
-            var airport = airportRepository.findById(gate.getAirportId()).orElseThrow(() -> new RuntimeException("Airport not found"));
+        if (nonNull(airportId)) {
+            var airport = airportService.findById(airportId).orElseThrow(() ->
+                    new RuntimeException("Airport not found"));
             updatedGate.setAirport(airport);
         }
 
-        gateRepository.save(updatedGate);
-        return updatedGate;
+        return gateRepository.save(updatedGate);
     }
 
     @Override
     public void delete(Integer id) {
-        var gate = gateRepository.findById(id).orElseThrow(() -> {
-            return new RuntimeException("Gate not found");
-        });
+        var gate = gateRepository.findById(id).orElseThrow(() -> new RuntimeException("Gate not found"));
         gateRepository.delete(gate);
+    }
+
+    @Override
+    public List<Gate> getAllGatesForAirport(Integer id) {
+        var airport = airportService.findById(id)
+                .orElseThrow(() -> new RuntimeException("Airport not found"));
+
+        return airport.getGates();
+    }
+
+    @Override
+    public Gate makeAvailable(Integer id) {
+        var gate = gateRepository.findById(id).orElseThrow(() -> new RuntimeException("Gate not found"));
+        gate.setStatus(AVAILABLE);
+
+        return gateRepository.save(gate);
+    }
+
+    @Override
+    public void setUnavailable(Gate gate) {
+        gate.setStatus(UNAVAILABLE);
+        gateRepository.save(gate);
     }
 }

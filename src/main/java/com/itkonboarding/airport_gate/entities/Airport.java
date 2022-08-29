@@ -26,7 +26,7 @@ public class Airport {
     @Column(name = "airport_id")
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String airportName;
 
     @JsonIgnore

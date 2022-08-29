@@ -1,6 +1,5 @@
 package com.itkonboarding.airport_gate.dto.response;
 
-import com.itkonboarding.airport_gate.dto.request.GateRequestDto;
 import lombok.Data;
 
 /**
@@ -15,5 +14,5 @@ public class FlightResponseDto {
 
     private String flightIndex;
 
-    private GateRequestDto gate;
+    private String gateName;
 }

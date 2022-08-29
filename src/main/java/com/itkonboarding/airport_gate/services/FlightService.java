@@ -1,7 +1,5 @@
 package com.itkonboarding.airport_gate.services;
 
-import com.itkonboarding.airport_gate.dto.request.FlightRequestDto;
-import com.itkonboarding.airport_gate.dto.request.FlightUpdateRequestDto;
 import com.itkonboarding.airport_gate.entities.Flight;
 
 import java.util.List;
@@ -28,7 +26,7 @@ public interface FlightService {
      * @param flight
      * @return created Flight entity
      */
-    public Flight create(FlightRequestDto flight);
+    public Flight create(Flight flight);
 
     /**
      * Update existing Flight entity
@@ -37,7 +35,7 @@ public interface FlightService {
      * @param flight
      * @return updated Flight entity
      */
-    public Flight update(Integer id, FlightUpdateRequestDto flight);
+    public Flight update(Integer flightId, Integer gateId, Flight flight);
 
     /**
      * Delete existing Flight entity

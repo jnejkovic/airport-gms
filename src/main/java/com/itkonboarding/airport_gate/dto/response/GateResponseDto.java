@@ -1,7 +1,5 @@
 package com.itkonboarding.airport_gate.dto.response;
 
-import com.itkonboarding.airport_gate.dto.request.FlightRequestDto;
-import com.itkonboarding.airport_gate.entities.Airport;
 import com.itkonboarding.airport_gate.entities.Gate;
 import lombok.Data;
 
@@ -20,9 +18,9 @@ public class GateResponseDto {
 
     private String gateName;
 
-    private AirportResponseDto airport;
+    private String airportName;
 
-    private List<FlightRequestDto> flights = new ArrayList<>();
+    private List<FlightResponseDto> flights = new ArrayList<>();
 
     private Gate.Status status;
 }

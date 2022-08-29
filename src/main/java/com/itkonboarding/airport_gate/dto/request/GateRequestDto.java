@@ -1,11 +1,9 @@
 package com.itkonboarding.airport_gate.dto.request;
 
-import com.itkonboarding.airport_gate.entities.Airport;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.Size;
 
 /**
  * Gate Dto used for requests
@@ -16,8 +14,8 @@ import java.util.List;
 public class GateRequestDto {
 
     @NotBlank(message = "Gate name must be provided")
+    @Size(min = 2, max = 3, message = "Flight index should be between {min} and {max} characters long.")
     private String gateName;
 
-    @NotBlank(message = "Airport id must be provided")
     private Integer airportId;
 }
