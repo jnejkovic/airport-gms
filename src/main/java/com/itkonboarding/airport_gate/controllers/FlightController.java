@@ -87,16 +87,4 @@ public class FlightController {
     public List<FlightResponseDto> getAll() {
         return flightService.getAll().stream().map(flightMapper::flightToFlightResponseDto).toList();
     }
-
-    /**
-     * Add flight to available gate
-     *
-     * @param gateId
-     * @param flightId
-     * @return Flight details
-     */
-    @PutMapping(value = "{flightId}/gate/{gateId}")
-    public FlightResponseDto addFlightToGate(@PathVariable Integer gateId, @PathVariable Integer flightId) {
-        return flightMapper.flightToFlightResponseDto(flightService.addFlightToGate(gateId, flightId));
-    }
 }

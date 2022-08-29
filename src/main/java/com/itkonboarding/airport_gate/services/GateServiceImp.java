@@ -74,16 +74,6 @@ public class GateServiceImp implements GateService {
     }
 
     @Override
-    public Gate addGateToAirport(Integer airportId, Integer gateId) {
-        var airport = airportService.findById(airportId)
-                .orElseThrow(() -> new RuntimeException("Airport not found"));
-        var gate = gateRepository.findById(gateId).orElseThrow(() -> new RuntimeException("Gate not found"));
-        gate.setAirport(airport);
-
-        return gateRepository.save(gate);
-    }
-
-    @Override
     public Gate makeAvailable(Integer id) {
         var gate = gateRepository.findById(id).orElseThrow(() -> new RuntimeException("Gate not found"));
         gate.setStatus(AVAILABLE);

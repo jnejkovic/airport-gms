@@ -66,21 +66,4 @@ public class FlightServiceImp implements FlightService {
     public List<Flight> getAll() {
         return flightRepository.findAll();
     }
-
-    @Override
-    public Flight addFlightToGate(Integer gateId, Integer flightId) {
-        var gate = gateService.findById(gateId).orElseThrow(() ->
-                new RuntimeException("Gate not found"));
-        var flight = flightRepository.findById(flightId).orElseThrow(() ->
-                new RuntimeException("Flight not found"));
-
-        if (gate.getStatus().equals(UNAVAILABLE)) {
-            throw new RuntimeException("Gate isn't available");
-        }
-
-        flight.setGate(gate);
-        gateService.setUnavailable(gate);
-
-        return flightRepository.save(flight);
-    }
 }

@@ -90,18 +90,6 @@ public class GateController {
     }
 
     /**
-     * Add gate to airport
-     *
-     * @param airportId
-     * @param gateId
-     * @return Added gate details
-     */
-    @PutMapping(value = "{gateId}/airport/{airportId}")
-    public GateResponseDto addGateToAirport(@PathVariable Integer airportId, @PathVariable Integer gateId) {
-        return gateMapper.gateToGateResponseDto(gateService.addGateToAirport(airportId, gateId));
-    }
-
-    /**
      * Get all airport gates
      *
      * @param id

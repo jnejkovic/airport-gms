@@ -53,15 +53,6 @@ public interface GateService {
     public List<Gate> getAllGatesForAirport(Integer id);
 
     /**
-     * Add gate to airport
-     *
-     * @param gateId
-     * @param airportId
-     * @return Added gate details
-     */
-    public Gate addGateToAirport(Integer airportId, Integer gateId);
-
-    /**
      * Set that gate is available
      *
      * @param id

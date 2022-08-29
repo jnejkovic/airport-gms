@@ -50,13 +50,4 @@ public interface FlightService {
      * @return list of Flight entites
      */
     public List<Flight> getAll();
-
-    /**
-     * Add flight to gate
-     *
-     * @param gateId
-     * @param flightId
-     * @return Added flight details
-     */
-    public Flight addFlightToGate(Integer gateId, Integer flightId);
 }
