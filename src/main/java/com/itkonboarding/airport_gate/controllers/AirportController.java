@@ -61,9 +61,7 @@ public class AirportController {
      */
     @GetMapping(value = "{id}")
     public AirportResponseDto get(@PathVariable Integer id) {
-        return airportService.findById(id)
-                .map(airportMapper::airportToAirportResponseDto)
-                .orElseThrow(() -> new RuntimeException("Airport not found"));
+        return airportMapper.airportToAirportResponseDto(airportService.findById(id));
     }
 
     /**

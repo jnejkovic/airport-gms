@@ -36,9 +36,7 @@ public class FlightController {
      */
     @GetMapping("{id}")
     public FlightResponseDto get(@PathVariable Integer id) {
-        return flightService.findById(id)
-                .map(flightMapper::flightToFlightResponseDto)
-                .orElseThrow(() -> new RuntimeException("Flight not found"));
+        return flightMapper.flightToFlightResponseDto(flightService.findById(id));
     }
 
     /**

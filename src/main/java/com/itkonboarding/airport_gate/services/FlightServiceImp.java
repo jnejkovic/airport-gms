@@ -1,12 +1,13 @@
 package com.itkonboarding.airport_gate.services;
 
 import com.itkonboarding.airport_gate.entities.Flight;
+import com.itkonboarding.airport_gate.exceptions.NoDataFoundException;
+import com.itkonboarding.airport_gate.exceptions.ResourceNotFoundException;
 import com.itkonboarding.airport_gate.repositories.FlightRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 import static com.itkonboarding.airport_gate.entities.Gate.Status.UNAVAILABLE;
 import static java.util.Objects.nonNull;
@@ -24,8 +25,10 @@ public class FlightServiceImp implements FlightService {
     private final GateService gateService;
 
     @Override
-    public Optional<Flight> findById(Integer id) {
-        return flightRepository.findById(id);
+    public Flight findById(Integer id) {
+
+        return flightRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Flight is not found for id->" + id));
     }
 
     @Override
@@ -36,19 +39,19 @@ public class FlightServiceImp implements FlightService {
     @Override
     public Flight update(Integer flightId, Integer gateId, Flight flight) {
         var updatedFlight = flightRepository.findById(flightId).orElseThrow(() ->
-                new RuntimeException("Flight not found"));
+                new ResourceNotFoundException("Flight is not found for id->" + flightId));
 
         if (isNotBlank(flight.getFlightIndex())) {
             updatedFlight.setFlightIndex(flight.getFlightIndex());
         }
 
         if (nonNull(gateId)) {
-            var gate = gateService.findById(gateId).orElseThrow(() ->
-                    new RuntimeException("Gate not found"));
+            var gate = gateService.findById(gateId);
 
             if (gate.getStatus().equals(UNAVAILABLE)) {
                 throw new RuntimeException("Gate isn't available");
             }
+
             gateService.setUnavailable(gate);
             updatedFlight.setGate(gate);
         }
@@ -58,12 +61,19 @@ public class FlightServiceImp implements FlightService {
 
     @Override
     public void delete(Integer id) {
-        var flight = flightRepository.findById(id).orElseThrow(() -> new RuntimeException("Flight not found"));
+        var flight = flightRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException("Flight is not found for id->" + id));
         flightRepository.delete(flight);
     }
 
     @Override
     public List<Flight> getAll() {
-        return flightRepository.findAll();
+        List<Flight> flights = flightRepository.findAll();
+
+        if (flights.size() > 0) {
+            return flights;
+        }
+
+        throw new NoDataFoundException("No flights data found");
     }
 }

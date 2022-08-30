@@ -36,9 +36,7 @@ public class GateController {
      */
     @GetMapping("{id}")
     public GateResponseDto get(@PathVariable Integer id) {
-        return gateService.findById(id)
-                .map(gateMapper::gateToGateResponseDto)
-                .orElseThrow(() -> new RuntimeException("Gate not found"));
+        return gateMapper.gateToGateResponseDto(gateService.findById(id));
     }
 
     /**
