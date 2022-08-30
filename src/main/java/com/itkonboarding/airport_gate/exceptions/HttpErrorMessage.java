@@ -5,6 +5,11 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * Class representing http error messages
+ *
+ * @author jnejkovic
+ */
 @Data
 public class HttpErrorMessage {
 

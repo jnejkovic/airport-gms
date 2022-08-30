@@ -1,5 +1,7 @@
 package com.itkonboarding.airport_gate.exceptions;
 
+import com.itkonboarding.airport_gate.mappers.ValidationMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -8,12 +10,21 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.itkonboarding.airport_gate.exceptions.ErrorCode.VALIDATION_ERROR;
 import static org.springframework.http.HttpStatus.*;
 
+/**
+ * Class responsible for exception handling
+ *
+ * @author jnejkovic
+ */
 @ControllerAdvice
+@RequiredArgsConstructor
 public class ControllerExceptionHandler {
+
+    private final ValidationMapper validationMapper;
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<HttpErrorMessage> handleResourceNotFoundException(ResourceNotFoundException ex) {
@@ -29,8 +40,8 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ValidationErrorMessage> handleValidationException(MethodArgumentNotValidException ex) {
         ValidationErrorMessage validationError = new ValidationErrorMessage();
-        List<String> errors = ex.getBindingResult().getFieldErrors().stream()
-                .map(error -> error.getDefaultMessage()).toList();
+        List<ValidationFieldError> errors = ex.getBindingResult().getFieldErrors().stream()
+                .map(validationMapper::errorToValidationFieldError).collect(Collectors.toList());
         validationError.setCode(BAD_REQUEST.value());
         validationError.setMessage(VALIDATION_ERROR);
         validationError.setTimeStamp(LocalDateTime.now());

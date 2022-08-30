@@ -1,5 +1,10 @@
 package com.itkonboarding.airport_gate.exceptions;
 
+/**
+ * Class representing error codes
+ *
+ * @author jnejkovic
+ */
 public class ErrorCode {
 
     //airport

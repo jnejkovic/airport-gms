@@ -4,8 +4,11 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * Class representing validation error messages
+ */
 @Data
 public class ValidationErrorMessage extends HttpErrorMessage{
 
-    private List<String> validationMessage;
+    private List<ValidationFieldError> validationMessage;
 }
