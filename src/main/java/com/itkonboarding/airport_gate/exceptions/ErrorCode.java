@@ -11,4 +11,7 @@ public class ErrorCode {
     //gate
     public static final String GATE_NOT_FOUND = "gate.not.found";
     public static final String GATE_NOT_AVAILABLE = "gate.not.available";
+
+    //validation error message
+    public static final String VALIDATION_ERROR = "validation.error";
 }

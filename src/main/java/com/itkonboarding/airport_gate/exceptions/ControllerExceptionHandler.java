@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static com.itkonboarding.airport_gate.exceptions.ErrorCode.VALIDATION_ERROR;
 import static org.springframework.http.HttpStatus.*;
 
 @ControllerAdvice
@@ -31,7 +32,7 @@ public class ControllerExceptionHandler {
         List<String> errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getDefaultMessage()).toList();
         validationError.setCode(BAD_REQUEST.value());
-        validationError.setMessage(ex.getMessage());
+        validationError.setMessage(VALIDATION_ERROR);
         validationError.setTimeStamp(LocalDateTime.now());
         validationError.setValidationMessage(errors);
 
