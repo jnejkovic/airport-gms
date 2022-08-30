@@ -27,7 +27,6 @@ public class FlightServiceImp implements FlightService {
 
     @Override
     public Optional<Flight> findById(Integer id) {
-
         return flightRepository.findById(id);
     }
 
