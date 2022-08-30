@@ -47,7 +47,7 @@ public class GateServiceImp implements GateService {
     @Override
     public Gate update(Integer gateId, Integer airportId, Gate gate) {
         var updatedGate = gateRepository.findById(gateId).orElseThrow(() ->
-                new ResourceNotFoundException("Gate is not found for id->"+gateId));
+                new ResourceNotFoundException("Gate is not found for id->" + gateId));
 
         if (isNotBlank(gate.getGateName())) {
             updatedGate.setGateName(gate.getGateName());
@@ -64,7 +64,7 @@ public class GateServiceImp implements GateService {
     @Override
     public void delete(Integer id) {
         var gate = gateRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Gate is not found for id->"+id));
+                new ResourceNotFoundException("Gate is not found for id->" + id));
         gateRepository.delete(gate);
     }
 
@@ -78,7 +78,7 @@ public class GateServiceImp implements GateService {
     @Override
     public Gate makeAvailable(Integer id) {
         var gate = gateRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Gate is not found for id->"+id));
+                new ResourceNotFoundException("Gate is not found for id->" + id));
         gate.setStatus(AVAILABLE);
 
         return gateRepository.save(gate);
