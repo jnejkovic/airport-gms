@@ -3,6 +3,7 @@ package com.itkonboarding.airport_gate.services;
 import com.itkonboarding.airport_gate.entities.Flight;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service used for flight related operations
@@ -17,7 +18,7 @@ public interface FlightService {
      * @param id
      * @return Flight entity if exists
      */
-    public Flight findById(Integer id);
+    public Optional<Flight> findById(Integer id);
 
     /**
      * Create new Flight entity

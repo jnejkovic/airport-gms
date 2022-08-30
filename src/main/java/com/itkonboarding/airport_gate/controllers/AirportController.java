@@ -2,6 +2,7 @@ package com.itkonboarding.airport_gate.controllers;
 
 import com.itkonboarding.airport_gate.dto.request.AirportRequestDto;
 import com.itkonboarding.airport_gate.dto.response.AirportResponseDto;
+import com.itkonboarding.airport_gate.exceptions.ResourceNotFoundException;
 import com.itkonboarding.airport_gate.mappers.AirportMapper;
 import com.itkonboarding.airport_gate.services.AirportService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static com.itkonboarding.airport_gate.exceptions.ErrorCode.AIRPORT_NOT_FOUND;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
@@ -61,7 +63,9 @@ public class AirportController {
      */
     @GetMapping(value = "{id}")
     public AirportResponseDto get(@PathVariable Integer id) {
-        return airportMapper.airportToAirportResponseDto(airportService.findById(id));
+        return airportService.findById(id)
+                .map(airportMapper::airportToAirportResponseDto)
+                .orElseThrow(() -> new ResourceNotFoundException(AIRPORT_NOT_FOUND));
     }
 
     /**

@@ -3,6 +3,7 @@ package com.itkonboarding.airport_gate.services;
 import com.itkonboarding.airport_gate.entities.Gate;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service used for gate related operations
@@ -17,7 +18,7 @@ public interface GateService {
      * @param id
      * @return Gate entity if exists
      */
-    public Gate findById(Integer id);
+    public Optional<Gate> findById(Integer id);
 
     /**
      * Create new Gate entity

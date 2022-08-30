@@ -7,9 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.itkonboarding.airport_gate.entities.Gate.Status.AVAILABLE;
 import static com.itkonboarding.airport_gate.entities.Gate.Status.UNAVAILABLE;
+import static com.itkonboarding.airport_gate.exceptions.ErrorCode.AIRPORT_NOT_FOUND;
+import static com.itkonboarding.airport_gate.exceptions.ErrorCode.GATE_NOT_FOUND;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -27,16 +30,16 @@ public class GateServiceImp implements GateService {
     private final AirportService airportService;
 
     @Override
-    public Gate findById(Integer id) {
-        return gateRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Gate is not found for id->" + id));
+    public Optional<Gate> findById(Integer id) {
+        return gateRepository.findById(id);
     }
 
     @Override
     public Gate create(Integer airportId, Gate gate) {
 
         if (nonNull(airportId)) {
-            var airport = airportService.findById(airportId);
+            var airport = airportService.findById(airportId)
+                    .orElseThrow(() -> new ResourceNotFoundException(AIRPORT_NOT_FOUND));
             gate.setAirport(airport);
         }
 
@@ -47,14 +50,15 @@ public class GateServiceImp implements GateService {
     @Override
     public Gate update(Integer gateId, Integer airportId, Gate gate) {
         var updatedGate = gateRepository.findById(gateId).orElseThrow(() ->
-                new ResourceNotFoundException("Gate is not found for id->" + gateId));
+                new ResourceNotFoundException(GATE_NOT_FOUND));
 
         if (isNotBlank(gate.getGateName())) {
             updatedGate.setGateName(gate.getGateName());
         }
 
         if (nonNull(airportId)) {
-            var airport = airportService.findById(airportId);
+            var airport = airportService.findById(airportId)
+                    .orElseThrow(() -> new ResourceNotFoundException(AIRPORT_NOT_FOUND));
             updatedGate.setAirport(airport);
         }
 
@@ -64,13 +68,14 @@ public class GateServiceImp implements GateService {
     @Override
     public void delete(Integer id) {
         var gate = gateRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Gate is not found for id->" + id));
+                new ResourceNotFoundException(GATE_NOT_FOUND));
         gateRepository.delete(gate);
     }
 
     @Override
     public List<Gate> getAllGatesForAirport(Integer id) {
-        var airport = airportService.findById(id);
+        var airport = airportService.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(AIRPORT_NOT_FOUND));
 
         return airport.getGates();
     }
@@ -78,7 +83,7 @@ public class GateServiceImp implements GateService {
     @Override
     public Gate makeAvailable(Integer id) {
         var gate = gateRepository.findById(id).orElseThrow(() ->
-                new ResourceNotFoundException("Gate is not found for id->" + id));
+                new ResourceNotFoundException(GATE_NOT_FOUND));
         gate.setStatus(AVAILABLE);
 
         return gateRepository.save(gate);

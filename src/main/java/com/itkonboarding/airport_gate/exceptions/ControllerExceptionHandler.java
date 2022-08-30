@@ -1,16 +1,13 @@
 package com.itkonboarding.airport_gate.exceptions;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -18,34 +15,36 @@ import static org.springframework.http.HttpStatus.*;
 public class ControllerExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorMessage> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        ErrorMessage eObject = new ErrorMessage();
+    public ResponseEntity<HttpErrorMessage> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        HttpErrorMessage eObject = new HttpErrorMessage();
         eObject.setCode(NOT_FOUND.value());
         eObject.setMessage(ex.getMessage());
         eObject.setTimeStamp(LocalDateTime.now());
 
-        return new ResponseEntity<ErrorMessage>(eObject, NOT_FOUND);
-    }
-
-    @ExceptionHandler(NoDataFoundException.class)
-    public ResponseEntity<ErrorMessage> handleNoDataFoundException(NoDataFoundException ex) {
-        ErrorMessage eObject = new ErrorMessage();
-        eObject.setCode(NO_CONTENT.value());
-        eObject.setMessage(ex.getMessage());
-        eObject.setTimeStamp(LocalDateTime.now());
-
-        return new ResponseEntity<ErrorMessage>(eObject, HttpStatus.OK);
+        return new ResponseEntity<HttpErrorMessage>(eObject, NOT_FOUND);
     }
 
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseBody
-    public Map<String, String> handleValidationException(MethodArgumentNotValidException ex) {
-        Map<String, String> errorMap = new HashMap<>();
-        ex.getBindingResult().getFieldErrors().forEach(error -> {
-            errorMap.put(error.getField(), error.getDefaultMessage());
-        });
+    public ResponseEntity<ValidationErrorMessage> handleValidationException(MethodArgumentNotValidException ex) {
+        ValidationErrorMessage validationError = new ValidationErrorMessage();
+        List<String> errors = ex.getBindingResult().getFieldErrors().stream()
+                .map(error -> error.getDefaultMessage()).toList();
+        validationError.setCode(BAD_REQUEST.value());
+        validationError.setMessage(ex.getMessage());
+        validationError.setTimeStamp(LocalDateTime.now());
+        validationError.setValidationMessage(errors);
 
-        return errorMap;
+        return new ResponseEntity<ValidationErrorMessage>(validationError, BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<HttpErrorMessage> handleException(Exception ex) {
+        HttpErrorMessage eObject = new HttpErrorMessage();
+        eObject.setCode(INTERNAL_SERVER_ERROR.value());
+        eObject.setMessage(ex.getMessage());
+        eObject.setTimeStamp(LocalDateTime.now());
+
+        return new ResponseEntity<HttpErrorMessage>(eObject, INTERNAL_SERVER_ERROR);
     }
 }
