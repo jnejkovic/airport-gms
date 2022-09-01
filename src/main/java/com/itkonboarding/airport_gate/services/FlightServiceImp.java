@@ -46,7 +46,7 @@ public class FlightServiceImp implements FlightService {
 
         if (nonNull(gateId)) {
             var gate = gateService.findById(gateId)
-                    .orElseThrow( ()->new ResourceNotFoundException(GATE_NOT_FOUND));
+                    .orElseThrow(() -> new ResourceNotFoundException(GATE_NOT_FOUND));
 
             if (gate.getStatus().equals(UNAVAILABLE)) {
                 throw new ResourceNotFoundException(GATE_NOT_AVAILABLE);

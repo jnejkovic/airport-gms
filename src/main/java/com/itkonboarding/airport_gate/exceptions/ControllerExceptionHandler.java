@@ -28,18 +28,18 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<HttpErrorMessage> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        HttpErrorMessage eObject = new HttpErrorMessage();
-        eObject.setCode(NOT_FOUND.value());
-        eObject.setMessage(ex.getMessage());
-        eObject.setTimeStamp(LocalDateTime.now());
+        var errorMessage = new HttpErrorMessage();
+        errorMessage.setCode(NOT_FOUND.value());
+        errorMessage.setMessage(ex.getMessage());
+        errorMessage.setTimeStamp(LocalDateTime.now());
 
-        return new ResponseEntity<HttpErrorMessage>(eObject, NOT_FOUND);
+        return new ResponseEntity<HttpErrorMessage>(errorMessage, NOT_FOUND);
     }
 
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ValidationErrorMessage> handleValidationException(MethodArgumentNotValidException ex) {
-        ValidationErrorMessage validationError = new ValidationErrorMessage();
+        var validationError = new ValidationErrorMessage();
         List<ValidationFieldError> errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(validationMapper::errorToValidationFieldError).collect(Collectors.toList());
         validationError.setCode(BAD_REQUEST.value());
@@ -52,11 +52,11 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<HttpErrorMessage> handleException(Exception ex) {
-        HttpErrorMessage eObject = new HttpErrorMessage();
-        eObject.setCode(INTERNAL_SERVER_ERROR.value());
-        eObject.setMessage(ex.getMessage());
-        eObject.setTimeStamp(LocalDateTime.now());
+        var errorMessage = new HttpErrorMessage();
+        errorMessage.setCode(INTERNAL_SERVER_ERROR.value());
+        errorMessage.setMessage(ex.getMessage());
+        errorMessage.setTimeStamp(LocalDateTime.now());
 
-        return new ResponseEntity<HttpErrorMessage>(eObject, INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<HttpErrorMessage>(errorMessage, INTERNAL_SERVER_ERROR);
     }
 }
