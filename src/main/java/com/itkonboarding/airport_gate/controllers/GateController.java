@@ -3,6 +3,7 @@ package com.itkonboarding.airport_gate.controllers;
 import com.itkonboarding.airport_gate.dto.request.GateRequestDto;
 import com.itkonboarding.airport_gate.dto.request.GateUpdateRequestDto;
 import com.itkonboarding.airport_gate.dto.response.GateResponseDto;
+import com.itkonboarding.airport_gate.exceptions.ResourceNotFoundException;
 import com.itkonboarding.airport_gate.mappers.GateMapper;
 import com.itkonboarding.airport_gate.services.GateService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static com.itkonboarding.airport_gate.exceptions.ErrorCode.GATE_NOT_FOUND;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
@@ -36,9 +38,8 @@ public class GateController {
      */
     @GetMapping("{id}")
     public GateResponseDto get(@PathVariable Integer id) {
-        return gateService.findById(id)
-                .map(gateMapper::gateToGateResponseDto)
-                .orElseThrow(() -> new RuntimeException("Gate not found"));
+        return gateService.findById(id).map(gateMapper::gateToGateResponseDto)
+                .orElseThrow(() -> new ResourceNotFoundException(GATE_NOT_FOUND));
     }
 
     /**

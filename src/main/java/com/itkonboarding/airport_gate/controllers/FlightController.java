@@ -3,6 +3,7 @@ package com.itkonboarding.airport_gate.controllers;
 import com.itkonboarding.airport_gate.dto.request.FlightRequestDto;
 import com.itkonboarding.airport_gate.dto.request.FlightUpdateRequestDto;
 import com.itkonboarding.airport_gate.dto.response.FlightResponseDto;
+import com.itkonboarding.airport_gate.exceptions.ResourceNotFoundException;
 import com.itkonboarding.airport_gate.mappers.FlightMapper;
 import com.itkonboarding.airport_gate.services.FlightService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static com.itkonboarding.airport_gate.exceptions.ErrorCode.FLIGHT_NOT_FOUND;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
@@ -36,9 +38,8 @@ public class FlightController {
      */
     @GetMapping("{id}")
     public FlightResponseDto get(@PathVariable Integer id) {
-        return flightService.findById(id)
-                .map(flightMapper::flightToFlightResponseDto)
-                .orElseThrow(() -> new RuntimeException("Flight not found"));
+        return flightService.findById(id).map(flightMapper::flightToFlightResponseDto)
+                .orElseThrow(() -> new ResourceNotFoundException(FLIGHT_NOT_FOUND));
     }
 
     /**
@@ -63,7 +64,8 @@ public class FlightController {
      */
     @PutMapping(value = "{id}")
     public FlightResponseDto update(@PathVariable Integer id, @Valid @RequestBody FlightUpdateRequestDto newFlight) {
-        var flight = flightService.update(id, newFlight.getGateId(), flightMapper.flightUpdateRequestDtoToFlight(newFlight));
+        var flight = flightService
+                .update(id, newFlight.getGateId(), flightMapper.flightUpdateRequestDtoToFlight(newFlight));
         return flightMapper.flightToFlightResponseDto(flight);
     }
 

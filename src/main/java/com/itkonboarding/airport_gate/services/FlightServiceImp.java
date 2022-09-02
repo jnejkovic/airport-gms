@@ -1,6 +1,7 @@
 package com.itkonboarding.airport_gate.services;
 
 import com.itkonboarding.airport_gate.entities.Flight;
+import com.itkonboarding.airport_gate.exceptions.ResourceNotFoundException;
 import com.itkonboarding.airport_gate.repositories.FlightRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.itkonboarding.airport_gate.entities.Gate.Status.UNAVAILABLE;
+import static com.itkonboarding.airport_gate.exceptions.ErrorCode.*;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -36,19 +38,20 @@ public class FlightServiceImp implements FlightService {
     @Override
     public Flight update(Integer flightId, Integer gateId, Flight flight) {
         var updatedFlight = flightRepository.findById(flightId).orElseThrow(() ->
-                new RuntimeException("Flight not found"));
+                new ResourceNotFoundException(FLIGHT_NOT_FOUND));
 
         if (isNotBlank(flight.getFlightIndex())) {
             updatedFlight.setFlightIndex(flight.getFlightIndex());
         }
 
         if (nonNull(gateId)) {
-            var gate = gateService.findById(gateId).orElseThrow(() ->
-                    new RuntimeException("Gate not found"));
+            var gate = gateService.findById(gateId)
+                    .orElseThrow(() -> new ResourceNotFoundException(GATE_NOT_FOUND));
 
             if (gate.getStatus().equals(UNAVAILABLE)) {
-                throw new RuntimeException("Gate isn't available");
+                throw new ResourceNotFoundException(GATE_NOT_AVAILABLE);
             }
+
             gateService.setUnavailable(gate);
             updatedFlight.setGate(gate);
         }
@@ -58,7 +61,8 @@ public class FlightServiceImp implements FlightService {
 
     @Override
     public void delete(Integer id) {
-        var flight = flightRepository.findById(id).orElseThrow(() -> new RuntimeException("Flight not found"));
+        var flight = flightRepository.findById(id).orElseThrow(() ->
+                new ResourceNotFoundException(FLIGHT_NOT_FOUND));
         flightRepository.delete(flight);
     }
 
