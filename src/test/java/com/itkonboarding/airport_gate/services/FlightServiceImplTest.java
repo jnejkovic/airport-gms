@@ -23,22 +23,22 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class FlightServiceImpTest {
+class FlightServiceImplTest {
 
     @Mock
     private FlightRepository flightRepository;
 
-    @InjectMocks
-    private FlightServiceImp flightServiceImp;
-
     @Mock
-    private GateServiceImp gateServiceImp;
+    private GateService gateService;
+
+    @InjectMocks
+    private FlightServiceImpl flightServiceImpl;
 
     @Test
     void findById() {
         var id = new Random().nextInt();
 
-        flightServiceImp.findById(id);
+        flightServiceImpl.findById(id);
 
         verify(flightRepository).findById(id);
     }
@@ -47,7 +47,7 @@ class FlightServiceImpTest {
     void create() {
         var flight = mock(Flight.class);
 
-        flightServiceImp.create(flight);
+        flightServiceImpl.create(flight);
 
         verify(flightRepository).save(flight);
     }
@@ -64,10 +64,10 @@ class FlightServiceImpTest {
 
         assertAll(
                 () -> assertThatExceptionOfType(ResourceNotFoundException.class)
-                        .isThrownBy(() -> flightServiceImp.update(flightId, gateId, flight))
+                        .isThrownBy(() -> flightServiceImpl.update(flightId, gateId, flight))
                         .withMessage(FLIGHT_NOT_FOUND),
                 () -> verify(updatedFlight, never()).setFlightIndex(flight.getFlightIndex()),
-                () -> verify(gateServiceImp, never()).setUnavailable(gate),
+                () -> verify(gateService, never()).setUnavailable(gate),
                 () -> verify(updatedFlight, never()).setGate(gate),
                 () -> verifyNoMoreInteractions(flightRepository)
         );
@@ -82,14 +82,14 @@ class FlightServiceImpTest {
         var gate = mock(Gate.class);
 
         when(flightRepository.findById(flightId)).thenReturn(of(updatedFlight));
-        when(gateServiceImp.findById(gateId)).thenReturn(empty());
+        when(gateService.findById(gateId)).thenReturn(empty());
 
         assertAll(
                 () -> assertThatExceptionOfType(ResourceNotFoundException.class)
-                        .isThrownBy(() -> flightServiceImp.update(flightId, gateId, flight))
+                        .isThrownBy(() -> flightServiceImpl.update(flightId, gateId, flight))
                         .withMessage(GATE_NOT_FOUND),
                 () -> verify(updatedFlight, never()).setFlightIndex(flight.getFlightIndex()),
-                () -> verify(gateServiceImp, never()).setUnavailable(gate),
+                () -> verify(gateService, never()).setUnavailable(gate),
                 () -> verify(updatedFlight, never()).setGate(gate),
                 () -> verifyNoMoreInteractions(flightRepository)
         );
@@ -103,16 +103,16 @@ class FlightServiceImpTest {
         var gate = mock(Gate.class);
         var updatedFlight = mock(Flight.class);
 
-        when(gateServiceImp.findById(gateId)).thenReturn(of(gate));
+        when(gateService.findById(gateId)).thenReturn(of(gate));
         when(gate.getStatus()).thenReturn(UNAVAILABLE);
         when(flightRepository.findById(flightId)).thenReturn(of(updatedFlight));
 
         assertAll(
                 () -> assertThatExceptionOfType(ResourceNotFoundException.class)
-                        .isThrownBy(() -> flightServiceImp.update(flightId, gateId, flight))
+                        .isThrownBy(() -> flightServiceImpl.update(flightId, gateId, flight))
                         .withMessage(GATE_NOT_AVAILABLE),
                 () -> verify(updatedFlight, never()).setFlightIndex(flight.getFlightIndex()),
-                () -> verify(gateServiceImp, never()).setUnavailable(gate),
+                () -> verify(gateService, never()).setUnavailable(gate),
                 () -> verify(updatedFlight, never()).setGate(gate),
                 () -> verifyNoMoreInteractions(flightRepository)
         );
@@ -129,14 +129,14 @@ class FlightServiceImpTest {
 
         when(flightRepository.findById(flightId)).thenReturn(of(updatedFlight));
         when(flight.getFlightIndex()).thenReturn(flightIndex);
-        when(gateServiceImp.findById(gateId)).thenReturn(of(gate));
+        when(gateService.findById(gateId)).thenReturn(of(gate));
         when(gate.getStatus()).thenReturn(AVAILABLE);
 
-        flightServiceImp.update(flightId, gateId, flight);
+        flightServiceImpl.update(flightId, gateId, flight);
 
         assertAll(
                 () -> verify(updatedFlight).setFlightIndex(flightIndex),
-                () -> verify(gateServiceImp).setUnavailable(gate),
+                () -> verify(gateService).setUnavailable(gate),
                 () -> verify(updatedFlight).setGate(gate),
                 () -> verify(flightRepository).save(updatedFlight)
         );
@@ -150,7 +150,7 @@ class FlightServiceImpTest {
 
         assertAll(
                 () -> assertThatExceptionOfType(ResourceNotFoundException.class).isThrownBy(() ->
-                        flightServiceImp.delete(id)).withMessage(FLIGHT_NOT_FOUND),
+                        flightServiceImpl.delete(id)).withMessage(FLIGHT_NOT_FOUND),
                 () -> verifyNoMoreInteractions(flightRepository)
         );
     }
@@ -162,14 +162,14 @@ class FlightServiceImpTest {
 
         when(flightRepository.findById(id)).thenReturn(of(flight));
 
-        flightServiceImp.delete(id);
+        flightServiceImpl.delete(id);
 
         verify(flightRepository).delete(flight);
     }
 
     @Test
     void getAll() {
-        flightServiceImp.getAll();
+        flightServiceImpl.getAll();
 
         verify(flightRepository).findAll();
     }

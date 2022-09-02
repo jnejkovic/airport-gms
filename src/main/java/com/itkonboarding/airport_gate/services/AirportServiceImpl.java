@@ -18,7 +18,7 @@ import static com.itkonboarding.airport_gate.exceptions.ErrorCode.AIRPORT_NOT_FO
  */
 @Service
 @RequiredArgsConstructor
-public class AirportServiceImp implements AirportService {
+public class AirportServiceImpl implements AirportService {
 
     private final AirportRepository airportRepository;
 

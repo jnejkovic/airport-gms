@@ -19,7 +19,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  */
 @Service
 @RequiredArgsConstructor
-public class FlightServiceImp implements FlightService {
+public class FlightServiceImpl implements FlightService {
 
     private final FlightRepository flightRepository;
 

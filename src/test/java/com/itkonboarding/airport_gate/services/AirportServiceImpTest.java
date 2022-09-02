@@ -25,7 +25,7 @@ class AirportServiceImpTest {
     @Mock
     private AirportRepository airportRepository;
     @InjectMocks
-    private AirportServiceImp airportServiceImp;
+    private AirportServiceImpl airportServiceImp;
 
     @Test
     void findById() {
