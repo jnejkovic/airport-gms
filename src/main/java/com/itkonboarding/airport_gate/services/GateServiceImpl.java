@@ -6,6 +6,7 @@ import com.itkonboarding.airport_gate.repositories.GateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +36,7 @@ public class GateServiceImpl implements GateService {
     }
 
     @Override
+    @Transactional
     public Gate create(Integer airportId, Gate gate) {
 
         if (nonNull(airportId)) {
@@ -48,6 +50,7 @@ public class GateServiceImpl implements GateService {
     }
 
     @Override
+    @Transactional
     public Gate update(Integer gateId, Integer airportId, Gate gate) {
         var updatedGate = gateRepository.findById(gateId).orElseThrow(() ->
                 new ResourceNotFoundException(GATE_NOT_FOUND));
@@ -81,6 +84,7 @@ public class GateServiceImpl implements GateService {
     }
 
     @Override
+    @Transactional
     public Gate makeAvailable(Integer id) {
         var gate = gateRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(GATE_NOT_FOUND));

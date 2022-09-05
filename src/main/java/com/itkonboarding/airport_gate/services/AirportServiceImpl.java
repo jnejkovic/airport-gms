@@ -6,6 +6,7 @@ import com.itkonboarding.airport_gate.repositories.AirportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +34,7 @@ public class AirportServiceImpl implements AirportService {
     }
 
     @Override
+    @Transactional
     public Airport update(Integer id, Airport airport) {
         var updatedAirport = airportRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(AIRPORT_NOT_FOUND));

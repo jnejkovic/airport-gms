@@ -6,6 +6,7 @@ import com.itkonboarding.airport_gate.repositories.FlightRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +37,7 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
+    @Transactional
     public Flight update(Integer flightId, Integer gateId, Flight flight) {
         var updatedFlight = flightRepository.findById(flightId).orElseThrow(() ->
                 new ResourceNotFoundException(FLIGHT_NOT_FOUND));
