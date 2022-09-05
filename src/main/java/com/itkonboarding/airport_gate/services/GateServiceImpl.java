@@ -23,7 +23,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  */
 @Service
 @RequiredArgsConstructor
-public class GateServiceImp implements GateService {
+public class GateServiceImpl implements GateService {
 
     private final GateRepository gateRepository;
 
