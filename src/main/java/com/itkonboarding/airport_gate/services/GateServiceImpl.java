@@ -65,7 +65,7 @@ public class GateServiceImpl implements GateService {
             updatedGate.setAirport(airport);
         }
 
-        return gateRepository.save(updatedGate);
+        return updatedGate;
     }
 
     @Override
@@ -84,7 +84,6 @@ public class GateServiceImpl implements GateService {
     }
 
     @Override
-    @Transactional
     public Gate makeAvailable(Integer id) {
         var gate = gateRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(GATE_NOT_FOUND));

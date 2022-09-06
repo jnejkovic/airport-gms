@@ -58,7 +58,7 @@ public class FlightServiceImpl implements FlightService {
             updatedFlight.setGate(gate);
         }
 
-        return flightRepository.save(updatedFlight);
+        return updatedFlight;
     }
 
     @Override
