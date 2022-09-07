@@ -107,7 +107,7 @@
                 <version>${jacoco.version}</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/dto/*/</exclude>
+                        <exclude>**/dto/</exclude>
                         <exclude>**/mappers/</exclude>
                         <exclude>**/entities/</exclude>
                         <exclude>**/exceptions/</exclude>
