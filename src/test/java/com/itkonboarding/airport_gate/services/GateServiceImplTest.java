@@ -19,6 +19,7 @@ import static com.itkonboarding.airport_gate.exceptions.ErrorCode.GATE_NOT_FOUND
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static net.bytebuddy.utility.RandomString.make;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.*;
@@ -138,12 +139,12 @@ class GateServiceImplTest {
         when(airportService.findById(airportId)).thenReturn(of(airport));
         when(gateRepository.findById(gateId)).thenReturn(of(updatedGate));
 
-        gateServiceImpl.update(gateId, airportId, gate);
+        var result = gateServiceImpl.update(gateId, airportId, gate);
 
         assertAll(
                 () -> verify(updatedGate).setGateName(gateName),
                 () -> verify(updatedGate).setAirport(airport),
-                () -> verify(gateRepository).save(updatedGate)
+                () -> assertThat(result).isEqualTo(updatedGate)
         );
     }
 
@@ -156,11 +157,11 @@ class GateServiceImplTest {
 
         when(gateRepository.findById(gateId)).thenReturn(of(updatedGate));
 
-        gateServiceImpl.update(gateId, airportId, gate);
+        var result = gateServiceImpl.update(gateId, airportId, gate);
 
         assertAll(
                 () -> verifyNoInteractions(updatedGate),
-                () -> verify(gateRepository).save(updatedGate)
+                () -> assertThat(result).isEqualTo(updatedGate)
         );
     }
 

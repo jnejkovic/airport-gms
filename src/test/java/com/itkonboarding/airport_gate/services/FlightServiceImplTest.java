@@ -18,6 +18,7 @@ import static com.itkonboarding.airport_gate.exceptions.ErrorCode.*;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.*;
@@ -132,13 +133,32 @@ class FlightServiceImplTest {
         when(gateService.findById(gateId)).thenReturn(of(gate));
         when(gate.getStatus()).thenReturn(AVAILABLE);
 
-        flightServiceImpl.update(flightId, gateId, flight);
+        var result = flightServiceImpl.update(flightId, gateId, flight);
 
         assertAll(
                 () -> verify(updatedFlight).setFlightIndex(flightIndex),
                 () -> verify(gateService).setUnavailable(gate),
                 () -> verify(updatedFlight).setGate(gate),
-                () -> verify(flightRepository).save(updatedFlight)
+                () -> assertThat(result).isEqualTo(updatedFlight)
+        );
+    }
+
+    @Test
+    void update_gateIdNull() {
+        var flightId = new Random().nextInt();
+        Integer gateId = null;
+        var flight = mock(Flight.class);
+        var flightIndex = randomAlphanumeric(4);
+        var updatedFlight = mock(Flight.class);
+
+        when(flightRepository.findById(flightId)).thenReturn(of(updatedFlight));
+        when(flight.getFlightIndex()).thenReturn(flightIndex);
+
+        var result = flightServiceImpl.update(flightId, gateId, flight);
+
+        assertAll(
+                () -> verify(updatedFlight).setFlightIndex(flightIndex),
+                () -> assertThat(result).isEqualTo(updatedFlight)
         );
     }
 

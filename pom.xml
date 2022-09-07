@@ -19,6 +19,9 @@
         <mapstruct.version>1.5.2.Final</mapstruct.version>
         <mvncompiler.version>3.10.1</mvncompiler.version>
         <mapstructprocessor.version>1.5.2.Final</mapstructprocessor.version>
+        <lombocmupstructbinding.version>0.2.0</lombocmupstructbinding.version>
+        <openapi.version>1.6.11</openapi.version>
+        <jacoco.version>0.8.8</jacoco.version>
     </properties>
     <dependencies>
         <dependency>
@@ -56,7 +59,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.6.11</version>
+            <version>${openapi.version}</version>
         </dependency>
 
         <dependency>
@@ -93,10 +96,38 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok-mapstruct-binding</artifactId>
-                            <version>0.2.0</version>
+                            <version>${lombocmupstructbinding.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/dto/</exclude>
+                        <exclude>**/mappers/</exclude>
+                        <exclude>**/entities/</exclude>
+                        <exclude>**/exceptions/</exclude>
+                        <exclude>**/AirportGateApplication.class</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
