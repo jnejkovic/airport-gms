@@ -35,7 +35,7 @@ public class Gate {
     private Integer id;
 
     @Column(nullable = false)
-    @Size(min = 2, max = 3, message = "Flight index should be between {min} and {max} characters long.")
+    @Size(min = 2, max = 3, message = "Gate name should be between {min} and {max} characters long.")
     private String gateName;
 
     @ManyToOne(cascade = REFRESH, fetch = LAZY)
