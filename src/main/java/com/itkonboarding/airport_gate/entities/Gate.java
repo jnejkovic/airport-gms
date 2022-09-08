@@ -3,8 +3,10 @@ package com.itkonboarding.airport_gate.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ import static javax.persistence.GenerationType.AUTO;
 @Entity
 @Getter
 @Setter
+@Accessors(chain = true)
 public class Gate {
 
     public enum Status {
@@ -32,6 +35,7 @@ public class Gate {
     private Integer id;
 
     @Column(nullable = false)
+    @Size(min = 2, max = 3, message = "Flight index should be between {min} and {max} characters long.")
     private String gateName;
 
     @ManyToOne(cascade = REFRESH, fetch = LAZY)

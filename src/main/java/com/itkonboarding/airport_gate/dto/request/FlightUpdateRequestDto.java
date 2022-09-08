@@ -1,8 +1,8 @@
 package com.itkonboarding.airport_gate.dto.request;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
@@ -12,6 +12,7 @@ import javax.validation.constraints.Size;
  * @author jnejkovic
  */
 @Data
+@Accessors(chain = true)
 public class FlightUpdateRequestDto {
 
     @Size(min = 2, max = 5, message = "Flight index should be between {min} and {max} characters long.")
