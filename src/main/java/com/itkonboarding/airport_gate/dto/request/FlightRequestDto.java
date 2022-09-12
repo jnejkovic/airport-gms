@@ -1,6 +1,7 @@
 package com.itkonboarding.airport_gate.dto.request;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -11,6 +12,7 @@ import javax.validation.constraints.Size;
  * @author jnejkovic
  */
 @Data
+@Accessors(chain = true)
 public class FlightRequestDto {
 
     @NotBlank(message = "Flight index must be provided")
