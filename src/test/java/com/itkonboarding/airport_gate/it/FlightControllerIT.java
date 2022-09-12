@@ -98,6 +98,32 @@ public class FlightControllerIT {
     }
 
     @Test
+    public void create_flightIndexLessThanValid() throws Exception {
+        var flightRequest = new FlightRequestDto().setFlightIndex(make(1));
+
+        var response = mockMvc.perform(post("/flight")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(flightRequest)));
+
+        response.andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.validationMessage[0].code", is("Size")));
+    }
+
+    @Test
+    public void create_flightIndexGreaterThanValid() throws Exception {
+        var flightRequest = new FlightRequestDto().setFlightIndex(make(6));
+
+        var response = mockMvc.perform(post("/flight")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(flightRequest)));
+
+        response.andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.validationMessage[0].code", is("Size")));
+    }
+
+    @Test
     public void update() throws Exception {
         var flight = new Flight().setFlightIndex(make(4));
         flightRepository.save(flight);
@@ -186,7 +212,7 @@ public class FlightControllerIT {
     }
 
     @Test
-    public void update_flightLessThanValid() throws Exception {
+    public void update_flightIndexLessThanValid() throws Exception {
         var flight = new Flight().setFlightIndex(make(4));
         flightRepository.save(flight);
 
@@ -203,7 +229,7 @@ public class FlightControllerIT {
     }
 
     @Test
-    public void update_flightGreaterThanValid() throws Exception {
+    public void update_flightIndexGreaterThanValid() throws Exception {
         var flight = new Flight().setFlightIndex(make(4));
         flightRepository.save(flight);
 

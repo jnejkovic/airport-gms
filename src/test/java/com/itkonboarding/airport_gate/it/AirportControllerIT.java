@@ -66,7 +66,8 @@ public class AirportControllerIT {
 
         response.andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(jsonPath("$.airportName", is(updatedAirport.getAirportName())));
+                .andExpect(jsonPath("$.airportName", is(updatedAirport.getAirportName())))
+                .andExpect(jsonPath("$.id", notNullValue()));
     }
 
     @Test
@@ -142,6 +143,8 @@ public class AirportControllerIT {
 
         response.andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(jsonPath("$.size()", is(airports.size())));
+                .andExpect(jsonPath("$.size()", is(airports.size())))
+                .andExpect(jsonPath("$.[0].airportName", is(airports.get(0).getAirportName())))
+                .andExpect(jsonPath("$.[1].airportName", is(airports.get(1).getAirportName())));
     }
 }

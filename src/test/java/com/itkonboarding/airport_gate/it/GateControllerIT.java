@@ -117,7 +117,7 @@ public class GateControllerIT {
     }
 
     @Test
-    public void create_notValid() throws Exception {
+    public void create_gateNameNotValid() throws Exception {
         var gateRequest = new GateRequestDto().setGateName(null);
 
         var response = mockMvc.perform(post("/gate")
@@ -130,7 +130,7 @@ public class GateControllerIT {
     }
 
     @Test
-    public void create_lessThanValid() throws Exception {
+    public void create_gateNameLessThanValid() throws Exception {
         var gateRequest = new GateRequestDto().setGateName(make(1));
 
         var response = mockMvc.perform(post("/gate")
@@ -143,7 +143,7 @@ public class GateControllerIT {
     }
 
     @Test
-    public void create_greaterThanValid() throws Exception {
+    public void create_gateNameGreaterThanValid() throws Exception {
         var gateRequest = new GateRequestDto().setGateName(make(4));
 
         var response = mockMvc.perform(post("/gate")
@@ -336,7 +336,7 @@ public class GateControllerIT {
 
     @Test
     public void getAllGatesForAirport_notFound() throws Exception {
-        var airportId =  new Random().nextInt();
+        var airportId = new Random().nextInt();
 
         var response = mockMvc.perform(get("/gate/{id}/gates", airportId));
 
