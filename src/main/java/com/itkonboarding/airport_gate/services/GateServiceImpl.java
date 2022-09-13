@@ -4,6 +4,7 @@ import com.itkonboarding.airport_gate.entities.Gate;
 import com.itkonboarding.airport_gate.exceptions.ResourceNotFoundException;
 import com.itkonboarding.airport_gate.repositories.GateRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -24,6 +25,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class GateServiceImpl implements GateService {
 
     private final GateRepository gateRepository;
@@ -32,12 +34,15 @@ public class GateServiceImpl implements GateService {
 
     @Override
     public Optional<Gate> findById(Integer id) {
+        log.debug("Find gate with id {}", id);
+
         return gateRepository.findById(id);
     }
 
     @Override
     @Transactional
     public Gate create(Integer airportId, Gate gate) {
+        log.debug("Create new gate with params {} and airportId {}", gate, airportId);
 
         if (nonNull(airportId)) {
             var airport = airportService.findById(airportId)
@@ -52,6 +57,8 @@ public class GateServiceImpl implements GateService {
     @Override
     @Transactional
     public Gate update(Integer gateId, Integer airportId, Gate gate) {
+        log.debug("Update gate id {} with params {} and airportId {}", gateId, gate, airportId);
+
         var updatedGate = gateRepository.findById(gateId).orElseThrow(() ->
                 new ResourceNotFoundException(GATE_NOT_FOUND));
 
@@ -70,6 +77,8 @@ public class GateServiceImpl implements GateService {
 
     @Override
     public void delete(Integer id) {
+        log.debug("Delete gate with id {}", id);
+
         var gate = gateRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(GATE_NOT_FOUND));
         gateRepository.delete(gate);
@@ -77,6 +86,8 @@ public class GateServiceImpl implements GateService {
 
     @Override
     public List<Gate> getAllGatesForAirport(Integer id) {
+        log.debug("Get all gates for airport id {}", id);
+
         var airport = airportService.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(AIRPORT_NOT_FOUND));
 
@@ -85,6 +96,8 @@ public class GateServiceImpl implements GateService {
 
     @Override
     public Gate makeAvailable(Integer id) {
+        log.debug("Change gate id {} to available", id);
+
         var gate = gateRepository.findById(id).orElseThrow(() ->
                 new ResourceNotFoundException(GATE_NOT_FOUND));
         gate.setStatus(AVAILABLE);
@@ -94,6 +107,8 @@ public class GateServiceImpl implements GateService {
 
     @Override
     public void setUnavailable(Gate gate) {
+        log.debug("Set status to unavailable for gate {}", gate);
+
         gate.setStatus(UNAVAILABLE);
         gateRepository.save(gate);
     }

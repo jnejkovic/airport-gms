@@ -7,6 +7,7 @@ import com.itkonboarding.airport_gate.exceptions.ResourceNotFoundException;
 import com.itkonboarding.airport_gate.mappers.GateMapper;
 import com.itkonboarding.airport_gate.services.GateService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,6 +25,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 @RestController
 @RequestMapping(value = "gate")
 @RequiredArgsConstructor
+@Slf4j
 public class GateController {
 
     private final GateService gateService;
@@ -38,6 +40,8 @@ public class GateController {
      */
     @GetMapping("{id}")
     public GateResponseDto get(@PathVariable Integer id) {
+        log.debug("Getting gate data for id {}", id);
+
         return gateService.findById(id).map(gateMapper::gateToGateResponseDto)
                 .orElseThrow(() -> new ResourceNotFoundException(GATE_NOT_FOUND));
     }
@@ -51,6 +55,8 @@ public class GateController {
     @PostMapping
     @ResponseStatus(CREATED)
     public GateResponseDto create(@Valid @RequestBody GateRequestDto newGate) {
+        log.debug("Create new gate with params {}", newGate);
+
         var gate = gateService.create(newGate.getAirportId(), gateMapper.gateRequestDtoToGate(newGate));
         return gateMapper.gateToGateResponseDto(gate);
     }
@@ -64,6 +70,8 @@ public class GateController {
      */
     @PutMapping(value = "{id}")
     public GateResponseDto update(@PathVariable Integer id, @Valid @RequestBody GateUpdateRequestDto newGate) {
+        log.debug("Update gate id {} with params {}", id, newGate);
+
         var gate = gateService.update(id, newGate.getAirportId(), gateMapper.gateUpdateRequestDtoToGate(newGate));
         return gateMapper.gateToGateResponseDto(gate);
     }
@@ -76,6 +84,8 @@ public class GateController {
      */
     @PutMapping(value = "{id}/available")
     public GateResponseDto makeAvailable(@PathVariable Integer id) {
+        log.debug("Change status to available for gate id {}", id);
+
         return gateMapper.gateToGateResponseDto(gateService.makeAvailable(id));
     }
 
@@ -87,6 +97,8 @@ public class GateController {
     @DeleteMapping(value = "{id}")
     @ResponseStatus(NO_CONTENT)
     public void delete(@PathVariable Integer id) {
+        log.debug("Delete gate with id {}", id);
+
         gateService.delete(id);
     }
 
@@ -98,6 +110,8 @@ public class GateController {
      */
     @GetMapping(value = "{id}/gates")
     public List<GateResponseDto> getAllGatesForAirport(@PathVariable Integer id) {
+        log.debug("Get all gates for airport id {}", id);
+
         return gateService.getAllGatesForAirport(id).stream().map(gateMapper::gateToGateResponseDto).toList();
     }
 }

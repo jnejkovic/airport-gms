@@ -7,6 +7,7 @@ import com.itkonboarding.airport_gate.exceptions.ResourceNotFoundException;
 import com.itkonboarding.airport_gate.mappers.FlightMapper;
 import com.itkonboarding.airport_gate.services.FlightService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -24,6 +25,7 @@ import static org.springframework.http.HttpStatus.NO_CONTENT;
 @RestController
 @RequestMapping(value = "flight")
 @RequiredArgsConstructor
+@Slf4j
 public class FlightController {
 
     private final FlightService flightService;
@@ -38,6 +40,8 @@ public class FlightController {
      */
     @GetMapping("{id}")
     public FlightResponseDto get(@PathVariable Integer id) {
+        log.debug("Getting flight data for id {}", id);
+
         return flightService.findById(id).map(flightMapper::flightToFlightResponseDto)
                 .orElseThrow(() -> new ResourceNotFoundException(FLIGHT_NOT_FOUND));
     }
@@ -51,6 +55,8 @@ public class FlightController {
     @PostMapping
     @ResponseStatus(CREATED)
     public FlightResponseDto create(@Valid @RequestBody FlightRequestDto newFlight) {
+        log.debug("Create new flight with params {}", newFlight);
+
         var flight = flightService.create(flightMapper.flightRequestDtoToFlight(newFlight));
         return flightMapper.flightToFlightResponseDto(flight);
     }
@@ -64,6 +70,8 @@ public class FlightController {
      */
     @PutMapping(value = "{id}")
     public FlightResponseDto update(@PathVariable Integer id, @Valid @RequestBody FlightUpdateRequestDto newFlight) {
+        log.debug("Update flight id {} with params {}", id, newFlight);
+
         var flight = flightService
                 .update(id, newFlight.getGateId(), flightMapper.flightUpdateRequestDtoToFlight(newFlight));
         return flightMapper.flightToFlightResponseDto(flight);
@@ -77,6 +85,8 @@ public class FlightController {
     @DeleteMapping(value = "{id}")
     @ResponseStatus(NO_CONTENT)
     public void delete(@PathVariable Integer id) {
+        log.debug("Delete flight with id {}", id);
+
         flightService.delete(id);
     }
 
@@ -87,6 +97,8 @@ public class FlightController {
      */
     @GetMapping
     public List<FlightResponseDto> getAll() {
+        log.debug("Get all flights");
+
         return flightService.getAll().stream().map(flightMapper::flightToFlightResponseDto).toList();
     }
 }
