@@ -40,7 +40,7 @@ public class AirportController {
     @PostMapping
     @ResponseStatus(CREATED)
     public AirportResponseDto create(@Valid @RequestBody AirportRequestDto newAirport) {
-        log.debug("Create new airport");
+        log.debug("Create new airport with params {}", newAirport);
 
         var airport = airportService.create(airportMapper.airportRequestDtoToAirport(newAirport));
         return airportMapper.airportToAirportResponseDto(airport);
@@ -55,7 +55,7 @@ public class AirportController {
      */
     @PutMapping(value = "{id}")
     public AirportResponseDto update(@PathVariable Integer id, @Valid @RequestBody AirportRequestDto updateAirport) {
-        log.debug("Update airport with id {}", id);
+        log.debug("Update airport id {} with params {}", id, updateAirport);
 
         var airport = airportService.update(id, airportMapper.airportRequestDtoToAirport(updateAirport));
         return airportMapper.airportToAirportResponseDto(airport);

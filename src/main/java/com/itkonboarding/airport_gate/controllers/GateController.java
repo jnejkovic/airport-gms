@@ -55,7 +55,7 @@ public class GateController {
     @PostMapping
     @ResponseStatus(CREATED)
     public GateResponseDto create(@Valid @RequestBody GateRequestDto newGate) {
-        log.debug("Create new gate");
+        log.debug("Create new gate with params {}", newGate);
 
         var gate = gateService.create(newGate.getAirportId(), gateMapper.gateRequestDtoToGate(newGate));
         return gateMapper.gateToGateResponseDto(gate);
@@ -70,7 +70,7 @@ public class GateController {
      */
     @PutMapping(value = "{id}")
     public GateResponseDto update(@PathVariable Integer id, @Valid @RequestBody GateUpdateRequestDto newGate) {
-        log.debug("Update gate with id {}", id);
+        log.debug("Update gate id {} with params {}", id, newGate);
 
         var gate = gateService.update(id, newGate.getAirportId(), gateMapper.gateUpdateRequestDtoToGate(newGate));
         return gateMapper.gateToGateResponseDto(gate);

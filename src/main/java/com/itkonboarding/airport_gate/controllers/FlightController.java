@@ -55,7 +55,7 @@ public class FlightController {
     @PostMapping
     @ResponseStatus(CREATED)
     public FlightResponseDto create(@Valid @RequestBody FlightRequestDto newFlight) {
-        log.debug("Create new flight");
+        log.debug("Create new flight with params {}", newFlight);
 
         var flight = flightService.create(flightMapper.flightRequestDtoToFlight(newFlight));
         return flightMapper.flightToFlightResponseDto(flight);
@@ -70,7 +70,7 @@ public class FlightController {
      */
     @PutMapping(value = "{id}")
     public FlightResponseDto update(@PathVariable Integer id, @Valid @RequestBody FlightUpdateRequestDto newFlight) {
-        log.debug("Update flight with id {}", id);
+        log.debug("Update flight id {} with params {}", id, newFlight);
 
         var flight = flightService
                 .update(id, newFlight.getGateId(), flightMapper.flightUpdateRequestDtoToFlight(newFlight));
