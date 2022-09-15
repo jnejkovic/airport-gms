@@ -37,17 +37,17 @@
     insert into hibernate_sequence values ( 1 );
 
     alter table airport
-       add constraint UK_69paj2x1e1xhf1q0fdq8ayby4 unique (airport_name);
+       add constraint UK_airport_name unique (airport_name);
 
     alter table flight
-       add constraint UK_53e1yt7x9smhe2e2n06l32t58 unique (flight_index);
+       add constraint UK_flight_index unique (flight_index);
 
     alter table flight
-       add constraint FK7e20lp7exxin7qs4xryiw9m2t
+       add constraint FK7_gate_id
        foreign key (gate)
        references gate (gate_id);
 
     alter table gate
-       add constraint FK392edgxsj8il1l5ippjilu01x
+       add constraint FK_airport_id
        foreign key (airport)
        references airport (airport_id);
