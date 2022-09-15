@@ -70,7 +70,6 @@
             <artifactId>flyway-core</artifactId>
             <version>8.5.13</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-mysql -->
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-mysql</artifactId>
