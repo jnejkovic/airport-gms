@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.GenerationType.AUTO;
 
@@ -32,7 +33,7 @@ public class Airport {
     private String airportName;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "airport", cascade = REFRESH)
+    @OneToMany(mappedBy = "airport", cascade = ALL)
     private List<Gate> gates = new ArrayList<>();
 
     @Version
