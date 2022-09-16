@@ -1,8 +1,8 @@
 ALTER TABLE flight
-  DROP CONSTRAINT fk7_gate_id;
+  DROP CONSTRAINT FK_flight_gate_id;
 
 ALTER TABLE gate
-  DROP CONSTRAINT fk_airport_id;
+  DROP CONSTRAINT FK_gate_airport_id;
 
 DROP TABLE airport;
 
