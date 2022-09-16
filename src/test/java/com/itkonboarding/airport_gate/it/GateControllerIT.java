@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -21,12 +22,16 @@ import static com.itkonboarding.airport_gate.entities.Gate.Status.AVAILABLE;
 import static com.itkonboarding.airport_gate.entities.Gate.Status.UNAVAILABLE;
 import static com.itkonboarding.airport_gate.exceptions.ErrorCode.AIRPORT_NOT_FOUND;
 import static com.itkonboarding.airport_gate.exceptions.ErrorCode.GATE_NOT_FOUND;
+import static java.time.LocalTime.of;
 import static net.bytebuddy.utility.RandomString.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -163,7 +168,8 @@ public class GateControllerIT {
         airportRepository.save(airport);
 
         var updatedGate = new GateUpdateRequestDto().setGateName(make(3))
-                .setAirportId(airport.getId());
+                .setAirportId(airport.getId()).setAvailableFrom(of(8, 0))
+                .setAvailableTo(of(15, 0));
 
         var response = mockMvc.perform(put("/gate/{id}", gate.getId())
                 .contentType(APPLICATION_JSON)
@@ -171,7 +177,9 @@ public class GateControllerIT {
 
         response.andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(jsonPath("$.gateName", is(updatedGate.getGateName())));
+                .andExpect(jsonPath("$.gateName", is(updatedGate.getGateName())))
+                .andExpect(jsonPath("$.availableFrom", is(updatedGate.getAvailableFrom().format(DateTimeFormatter.ISO_TIME))))
+                .andExpect(jsonPath("$.availableTo", is(updatedGate.getAvailableTo().format(DateTimeFormatter.ISO_TIME))));
     }
 
     @Test

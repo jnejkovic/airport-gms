@@ -19,13 +19,20 @@ import java.util.Random;
 
 import static com.itkonboarding.airport_gate.entities.Gate.Status.AVAILABLE;
 import static com.itkonboarding.airport_gate.entities.Gate.Status.UNAVAILABLE;
-import static com.itkonboarding.airport_gate.exceptions.ErrorCode.*;
+import static com.itkonboarding.airport_gate.exceptions.ErrorCode.FLIGHT_NOT_FOUND;
+import static com.itkonboarding.airport_gate.exceptions.ErrorCode.GATE_CURRENT_NOT_AVAILABLE;
+import static com.itkonboarding.airport_gate.exceptions.ErrorCode.GATE_NOT_AVAILABLE;
+import static com.itkonboarding.airport_gate.exceptions.ErrorCode.GATE_NOT_FOUND;
+import static java.time.LocalTime.now;
 import static net.bytebuddy.utility.RandomString.make;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -127,7 +134,8 @@ public class FlightControllerIT {
     public void update() throws Exception {
         var flight = new Flight().setFlightIndex(make(4));
         flightRepository.save(flight);
-        var gate = new Gate().setGateName(make(2)).setStatus(AVAILABLE);
+        var gate = new Gate().setGateName(make(2)).setStatus(AVAILABLE)
+                .setAvailableFrom(now().minusHours(3)).setAvailableTo(now().plusHours(3));
         gateRepository.save(gate);
 
         var updatedFlight = new FlightUpdateRequestDto()
@@ -140,6 +148,46 @@ public class FlightControllerIT {
         response.andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$.flightIndex", is(updatedFlight.getFlightIndex())));
+    }
+
+    @Test
+    public void update_currentTimeLessThanAvailableFrom() throws Exception {
+        var flight = new Flight().setFlightIndex(make(4));
+        flightRepository.save(flight);
+        var gate = new Gate().setGateName(make(2)).setStatus(AVAILABLE)
+                .setAvailableFrom(now().plusHours(3)).setAvailableTo(now().plusHours(6));
+        gateRepository.save(gate);
+
+        var updatedFlight = new FlightUpdateRequestDto()
+                .setFlightIndex(make(4)).setGateId(gate.getId());
+
+        var response = mockMvc.perform(put("/flight/{id}", flight.getId())
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedFlight)));
+
+        response.andExpect(status().isNotFound())
+                .andDo(print())
+                .andExpect(jsonPath("$.message", is(GATE_CURRENT_NOT_AVAILABLE)));
+    }
+
+    @Test
+    public void update_currentTimeGreaterThanAvailableTo() throws Exception {
+        var flight = new Flight().setFlightIndex(make(4));
+        flightRepository.save(flight);
+        var gate = new Gate().setGateName(make(2)).setStatus(AVAILABLE)
+                .setAvailableFrom(now().minusHours(6)).setAvailableTo(now().minusHours(3));
+        gateRepository.save(gate);
+
+        var updatedFlight = new FlightUpdateRequestDto()
+                .setFlightIndex(make(4)).setGateId(gate.getId());
+
+        var response = mockMvc.perform(put("/flight/{id}", flight.getId())
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedFlight)));
+
+        response.andExpect(status().isNotFound())
+                .andDo(print())
+                .andExpect(jsonPath("$.message", is(GATE_CURRENT_NOT_AVAILABLE)));
     }
 
     @Test

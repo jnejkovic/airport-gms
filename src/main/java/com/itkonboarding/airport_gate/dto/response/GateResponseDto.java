@@ -3,6 +3,7 @@ package com.itkonboarding.airport_gate.dto.response;
 import com.itkonboarding.airport_gate.entities.Gate;
 import lombok.Data;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,10 @@ public class GateResponseDto {
     private Integer id;
 
     private String gateName;
+
+    private LocalTime availableFrom;
+
+    private LocalTime availableTo;
 
     private String airportName;
 
