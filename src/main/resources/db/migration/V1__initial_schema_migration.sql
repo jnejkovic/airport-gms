@@ -1,48 +1,39 @@
-create table airport (
-   airport_id integer not null,
-        airport_name varchar(255) not null,
-        version integer,
-        primary key (airport_id)
-    ) engine = InnoDB;
+CREATE TABLE airport
+  (
+     airport_id   INTEGER NOT NULL,
+     airport_name VARCHAR(255) NOT NULL,
+     version      INTEGER,
+     PRIMARY KEY (airport_id),
+     CONSTRAINT uk_airport_name UNIQUE (airport_name)
+  );
 
-create table flight (
-       flight_id integer not null,
-        flight_index varchar(255) not null,
-        version integer,
-        gate integer,
-        primary key (flight_id)
-    ) engine = InnoDB;
+CREATE TABLE gate
+  (
+     gate_id   INTEGER NOT NULL,
+     gate_name VARCHAR(3) NOT NULL,
+     status    VARCHAR(255) NOT NULL,
+     version   INTEGER,
+     airport   INTEGER,
+     PRIMARY KEY (gate_id),
+     CONSTRAINT fk_airport_id FOREIGN KEY (airport) REFERENCES airport (
+     airport_id)
+  );
 
-create table gate (
-       gate_id integer not null,
-        gate_name varchar(3) not null,
-        status varchar(255) not null,
-        version integer,
-        airport integer,
-        primary key (gate_id)
-    ) engine = InnoDB;
+CREATE TABLE flight
+  (
+     flight_id    INTEGER NOT NULL,
+     flight_index VARCHAR(255) NOT NULL,
+     version      INTEGER,
+     gate         INTEGER,
+     PRIMARY KEY (flight_id),
+     CONSTRAINT fk7_gate_id FOREIGN KEY (gate) REFERENCES gate (gate_id),
+     CONSTRAINT uk_flight_index UNIQUE (flight_index)
+  );
 
-create table hibernate_sequence (
-       next_val bigint
-    ) engine = InnoDB;
+CREATE TABLE hibernate_sequence
+  (
+     next_val BIGINT
+  );
 
-insert
-	into
-	hibernate_sequence
-values (1);
-
-alter table airport
-       add constraint UK_airport_name unique (airport_name);
-
-alter table flight
-       add constraint UK_flight_index unique (flight_index);
-
-alter table flight
-       add constraint FK7_gate_id
-       foreign key (gate)
-       references gate (gate_id);
-
-alter table gate
-       add constraint FK_airport_id
-       foreign key (airport)
-       references airport (airport_id);
+INSERT INTO hibernate_sequence
+VALUES      (1);
