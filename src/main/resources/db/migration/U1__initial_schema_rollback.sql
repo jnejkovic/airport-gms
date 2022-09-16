@@ -12,5 +12,5 @@ DROP TABLE gate;
 
 DROP TABLE hibernate_sequence;
 
-DELETE FROM airport_gate.flyway_schema_history
+DELETE FROM flyway_schema_history
 WHERE  version = 1;
