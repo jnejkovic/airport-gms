@@ -17,6 +17,7 @@ import static com.itkonboarding.airport_gate.entities.Gate.Status.UNAVAILABLE;
 import static com.itkonboarding.airport_gate.exceptions.ErrorCode.FLIGHT_NOT_FOUND;
 import static com.itkonboarding.airport_gate.exceptions.ErrorCode.GATE_NOT_AVAILABLE;
 import static com.itkonboarding.airport_gate.exceptions.ErrorCode.GATE_NOT_FOUND;
+import static java.time.LocalTime.now;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
@@ -168,6 +169,7 @@ class FlightServiceImplTest {
                 () -> assertThat(result).isEqualTo(updatedFlight)
         );
     }
+
 
     @Test
     void delete_notFoundException() {

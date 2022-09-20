@@ -134,8 +134,54 @@ public class FlightControllerIT {
     public void update() throws Exception {
         var flight = new Flight().setFlightIndex(make(4));
         flightRepository.save(flight);
-        var gate = new Gate().setGateName(make(2)).setStatus(AVAILABLE)
-                .setAvailableFrom(now().minusHours(3)).setAvailableTo(now().plusHours(3));
+        var gate = new Gate().setGateName(make(2))
+                .setStatus(AVAILABLE)
+                .setAvailableFrom(now().minusHours(3))
+                .setAvailableTo(now().plusHours(3));
+        gateRepository.save(gate);
+
+        var updatedFlight = new FlightUpdateRequestDto()
+                .setFlightIndex(make(4)).setGateId(gate.getId());
+
+        var response = mockMvc.perform(put("/flight/{id}", flight.getId())
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedFlight)));
+
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.flightIndex", is(updatedFlight.getFlightIndex())));
+    }
+
+    @Test
+    public void update_gateAvailableToIsNull() throws Exception {
+        var flight = new Flight().setFlightIndex(make(4));
+        flightRepository.save(flight);
+        var gate = new Gate().setGateName(make(2))
+                .setStatus(AVAILABLE)
+                .setAvailableFrom(now().minusHours(3))
+                .setAvailableTo(null);
+        gateRepository.save(gate);
+
+        var updatedFlight = new FlightUpdateRequestDto()
+                .setFlightIndex(make(4)).setGateId(gate.getId());
+
+        var response = mockMvc.perform(put("/flight/{id}", flight.getId())
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedFlight)));
+
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.flightIndex", is(updatedFlight.getFlightIndex())));
+    }
+
+    @Test
+    public void update_gateAvailableFromIsNull() throws Exception {
+        var flight = new Flight().setFlightIndex(make(4));
+        flightRepository.save(flight);
+        var gate = new Gate().setGateName(make(2))
+                .setStatus(AVAILABLE)
+                .setAvailableFrom(null)
+                .setAvailableTo(now().plusHours(3));
         gateRepository.save(gate);
 
         var updatedFlight = new FlightUpdateRequestDto()
@@ -154,8 +200,10 @@ public class FlightControllerIT {
     public void update_currentTimeLessThanAvailableFrom() throws Exception {
         var flight = new Flight().setFlightIndex(make(4));
         flightRepository.save(flight);
-        var gate = new Gate().setGateName(make(2)).setStatus(AVAILABLE)
-                .setAvailableFrom(now().plusHours(3)).setAvailableTo(now().plusHours(6));
+        var gate = new Gate().setGateName(make(2))
+                .setStatus(AVAILABLE)
+                .setAvailableFrom(now().plusHours(3))
+                .setAvailableTo(now().plusHours(6));
         gateRepository.save(gate);
 
         var updatedFlight = new FlightUpdateRequestDto()
@@ -174,8 +222,10 @@ public class FlightControllerIT {
     public void update_currentTimeGreaterThanAvailableTo() throws Exception {
         var flight = new Flight().setFlightIndex(make(4));
         flightRepository.save(flight);
-        var gate = new Gate().setGateName(make(2)).setStatus(AVAILABLE)
-                .setAvailableFrom(now().minusHours(6)).setAvailableTo(now().minusHours(3));
+        var gate = new Gate().setGateName(make(2))
+                .setStatus(AVAILABLE)
+                .setAvailableFrom(now().minusHours(6))
+                .setAvailableTo(now().minusHours(3));
         gateRepository.save(gate);
 
         var updatedFlight = new FlightUpdateRequestDto()

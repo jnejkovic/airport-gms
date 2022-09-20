@@ -68,10 +68,8 @@ public class GateServiceImpl implements GateService {
             updatedGate.setGateName(gate.getGateName());
         }
 
-        if (nonNull(gate.getAvailableFrom())) {
+        if (nonNull(gate.getAvailableFrom()) && nonNull(gate.getAvailableTo())) {
             updatedGate.setAvailableFrom(gate.getAvailableFrom());
-        }
-        if (nonNull(gate.getAvailableTo())) {
             updatedGate.setAvailableTo(gate.getAvailableTo());
         }
 
@@ -124,9 +122,15 @@ public class GateServiceImpl implements GateService {
 
     public boolean isGateAvailable(Gate gate) {
         var currentTime = now();
-        if (currentTime.isAfter(gate.getAvailableTo()) || currentTime.isBefore(gate.getAvailableFrom())) {
-            throw new ResourceNotFoundException(GATE_CURRENT_NOT_AVAILABLE);
+
+        if (nonNull(gate.getAvailableFrom()) && nonNull(gate.getAvailableTo())) {
+
+            if (currentTime.isAfter(gate.getAvailableTo()) || currentTime.isBefore(gate.getAvailableFrom())) {
+                throw new ResourceNotFoundException(GATE_CURRENT_NOT_AVAILABLE);
+            }
+            return true;
         }
-        return true;
+
+        return false;
     }
 }

@@ -158,6 +158,31 @@ class GateServiceImplTest {
     }
 
     @Test
+    void update_gateAvailableToIsNull() {
+        var gateId = Math.abs(new Random().nextInt());
+        var airportId = new Random().nextInt();
+        var gate = mock(Gate.class);
+        var updatedGate = mock(Gate.class);
+        var gateName = make();
+        var airport = mock(Airport.class);
+        var availableFrom = now().minusHours(3);
+
+        when(gate.getGateName()).thenReturn(gateName);
+        when(gate.getAvailableFrom()).thenReturn(availableFrom);
+        when(gate.getAvailableTo()).thenReturn(null);
+        when(airportService.findById(airportId)).thenReturn(of(airport));
+        when(gateRepository.findById(gateId)).thenReturn(of(updatedGate));
+
+        var result = gateServiceImpl.update(gateId, airportId, gate);
+
+        assertAll(
+                () -> verify(updatedGate).setGateName(gateName),
+                () -> verify(updatedGate).setAirport(airport),
+                () -> assertThat(result).isEqualTo(updatedGate)
+        );
+    }
+
+    @Test
     void update_withNull() {
         var gateId = new Random().nextInt();
         Integer airportId = null;
@@ -287,8 +312,10 @@ class GateServiceImplTest {
     void isGateAvailable_currentTimeGreaterThanAvailableTo() {
         var gate = mock(Gate.class);
         var availableTo = now().minusHours(3);
+        var availableFrom = now().minusHours(6);
 
         when(gate.getAvailableTo()).thenReturn(availableTo);
+        when(gate.getAvailableFrom()).thenReturn(availableFrom);
 
         assertThatExceptionOfType(ResourceNotFoundException.class)
                 .isThrownBy(() -> gateServiceImpl.isGateAvailable(gate))
@@ -307,5 +334,26 @@ class GateServiceImplTest {
         assertThatExceptionOfType(ResourceNotFoundException.class)
                 .isThrownBy(() -> gateServiceImpl.isGateAvailable(gate))
                 .withMessage(GATE_CURRENT_NOT_AVAILABLE);
+    }
+
+    @Test
+    void isGateAvailable_availableFromAndAvailableToAreNull() {
+        var gate = mock(Gate.class);
+
+        var result = gateServiceImpl.isGateAvailable(gate);
+
+        assertThat(result).isEqualTo(false);
+    }
+
+    @Test
+    void isGateAvailable_availableFromIsNull() {
+        var gate = mock(Gate.class);
+        var availableFrom = now().minusHours(3);
+
+        when(gate.getAvailableFrom()).thenReturn(availableFrom);
+
+        var result = gateServiceImpl.isGateAvailable(gate);
+
+        assertThat(result).isEqualTo(false);
     }
 }

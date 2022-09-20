@@ -183,6 +183,26 @@ public class GateControllerIT {
     }
 
     @Test
+    public void update_gateAvailableToIsNull() throws Exception {
+        var gate = new Gate().setGateName(make(2)).setStatus(AVAILABLE);
+        gateRepository.save(gate);
+        var airport = new Airport().setAirportName(make());
+        airportRepository.save(airport);
+
+        var updatedGate = new GateUpdateRequestDto().setGateName(make(3))
+                .setAirportId(airport.getId()).setAvailableFrom(of(8, 0))
+                .setAvailableTo(null);
+
+        var response = mockMvc.perform(put("/gate/{id}", gate.getId())
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedGate)));
+
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.gateName", is(updatedGate.getGateName())));
+    }
+
+    @Test
     public void update_gateAndAirportNull() throws Exception {
         var gate = new Gate().setGateName(make(2)).setStatus(AVAILABLE);
         gateRepository.save(gate);
