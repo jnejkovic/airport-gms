@@ -5,8 +5,18 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Version;
 import javax.validation.constraints.Size;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +59,10 @@ public class Gate {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    private LocalTime availableFrom;
+
+    private LocalTime availableTo;
 
     @Version
     private Integer version;

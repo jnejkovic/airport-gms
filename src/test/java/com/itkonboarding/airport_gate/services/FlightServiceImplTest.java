@@ -14,14 +14,21 @@ import java.util.Random;
 
 import static com.itkonboarding.airport_gate.entities.Gate.Status.AVAILABLE;
 import static com.itkonboarding.airport_gate.entities.Gate.Status.UNAVAILABLE;
-import static com.itkonboarding.airport_gate.exceptions.ErrorCode.*;
+import static com.itkonboarding.airport_gate.exceptions.ErrorCode.FLIGHT_NOT_FOUND;
+import static com.itkonboarding.airport_gate.exceptions.ErrorCode.GATE_NOT_AVAILABLE;
+import static com.itkonboarding.airport_gate.exceptions.ErrorCode.GATE_NOT_FOUND;
+import static java.time.LocalTime.now;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class FlightServiceImplTest {
@@ -137,6 +144,7 @@ class FlightServiceImplTest {
 
         assertAll(
                 () -> verify(updatedFlight).setFlightIndex(flightIndex),
+                () -> verify(gateService).isGateAvailable(gate),
                 () -> verify(gateService).setUnavailable(gate),
                 () -> verify(updatedFlight).setGate(gate),
                 () -> assertThat(result).isEqualTo(updatedFlight)
@@ -161,6 +169,7 @@ class FlightServiceImplTest {
                 () -> assertThat(result).isEqualTo(updatedFlight)
         );
     }
+
 
     @Test
     void delete_notFoundException() {

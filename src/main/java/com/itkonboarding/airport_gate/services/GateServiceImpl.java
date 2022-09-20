@@ -14,7 +14,9 @@ import java.util.Optional;
 import static com.itkonboarding.airport_gate.entities.Gate.Status.AVAILABLE;
 import static com.itkonboarding.airport_gate.entities.Gate.Status.UNAVAILABLE;
 import static com.itkonboarding.airport_gate.exceptions.ErrorCode.AIRPORT_NOT_FOUND;
+import static com.itkonboarding.airport_gate.exceptions.ErrorCode.GATE_CURRENT_NOT_AVAILABLE;
 import static com.itkonboarding.airport_gate.exceptions.ErrorCode.GATE_NOT_FOUND;
+import static java.time.LocalTime.now;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -66,6 +68,11 @@ public class GateServiceImpl implements GateService {
             updatedGate.setGateName(gate.getGateName());
         }
 
+        if (nonNull(gate.getAvailableFrom()) && nonNull(gate.getAvailableTo())) {
+            updatedGate.setAvailableFrom(gate.getAvailableFrom());
+            updatedGate.setAvailableTo(gate.getAvailableTo());
+        }
+
         if (nonNull(airportId)) {
             var airport = airportService.findById(airportId)
                     .orElseThrow(() -> new ResourceNotFoundException(AIRPORT_NOT_FOUND));
@@ -111,5 +118,19 @@ public class GateServiceImpl implements GateService {
 
         gate.setStatus(UNAVAILABLE);
         gateRepository.save(gate);
+    }
+
+    public boolean isGateAvailable(Gate gate) {
+        var currentTime = now();
+
+        if (nonNull(gate.getAvailableFrom()) && nonNull(gate.getAvailableTo())) {
+
+            if (currentTime.isAfter(gate.getAvailableTo()) || currentTime.isBefore(gate.getAvailableFrom())) {
+                throw new ResourceNotFoundException(GATE_CURRENT_NOT_AVAILABLE);
+            }
+            return true;
+        }
+
+        return false;
     }
 }

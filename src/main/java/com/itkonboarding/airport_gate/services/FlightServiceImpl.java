@@ -12,7 +12,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.itkonboarding.airport_gate.entities.Gate.Status.UNAVAILABLE;
-import static com.itkonboarding.airport_gate.exceptions.ErrorCode.*;
+import static com.itkonboarding.airport_gate.exceptions.ErrorCode.FLIGHT_NOT_FOUND;
+import static com.itkonboarding.airport_gate.exceptions.ErrorCode.GATE_NOT_AVAILABLE;
+import static com.itkonboarding.airport_gate.exceptions.ErrorCode.GATE_NOT_FOUND;
 import static java.util.Objects.nonNull;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -61,6 +63,8 @@ public class FlightServiceImpl implements FlightService {
             if (gate.getStatus().equals(UNAVAILABLE)) {
                 throw new ResourceNotFoundException(GATE_NOT_AVAILABLE);
             }
+
+            gateService.isGateAvailable(gate);
 
             gateService.setUnavailable(gate);
             updatedFlight.setGate(gate);

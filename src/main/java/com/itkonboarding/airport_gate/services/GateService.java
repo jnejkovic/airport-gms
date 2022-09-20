@@ -66,4 +66,12 @@ public interface GateService {
      * @param gate
      */
     public void setUnavailable(Gate gate);
+
+    /**
+     * Check if gate is current available
+     *
+     * @param gate
+     * @return
+     */
+    public boolean isGateAvailable(Gate gate);
 }
